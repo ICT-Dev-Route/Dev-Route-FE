@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
 
-function App() {
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  MainPage,
+  CompanySearch,
+  CourseSearch,
+  DeveloperDescription,
+  ErrorInquiry,
+  JobSearch,
+  Roadmap,
+} from './Page';
+import { ThemeProvider } from 'styled-components';
+import { theme } from './theme';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path="/mainPage" element={<MainPage />} />
+          <Route path="/companySearch" element={<CompanySearch />} />
+          <Route path="/courseSearch" element={<CourseSearch />} />
+          <Route
+            path="/developerDescription"
+            element={<DeveloperDescription />}
+          />
+          <Route path="/errorInquiry" element={<ErrorInquiry />} />
+          <Route path="/jobSearch" element={<JobSearch />} />
+          <Route path="/roadmap" element={<Roadmap />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
