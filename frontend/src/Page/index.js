@@ -5,6 +5,8 @@ import ErrorInquiry from './ErrorInquiry';
 import JobSearch from './JobSearch';
 import MainPage from './MainPage';
 import Roadmap from './Roadmap';
+import Login from './Login';
+import Signup from './Signup';
 
 export {
   CompanySearch,
@@ -14,4 +16,6 @@ export {
   JobSearch,
   MainPage,
   Roadmap,
+  Login,
+  Signup,
 };
