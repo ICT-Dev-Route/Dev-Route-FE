@@ -26,7 +26,7 @@ const MainPage = () => {
         if (response.ok) {
           const token = await response.text();
           localStorage.setItem('token', token);
-          // console.log('Token stored in localStorage:', token);
+          console.log('Token stored in localStorage:', token);
         } else {
           navigate('/login');
         }

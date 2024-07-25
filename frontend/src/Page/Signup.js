@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header, Footer } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
@@ -92,10 +93,11 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [developmentField, setDevelopmentField] = useState('');
+  const navigate = useNavigate();
 
   const SignupAPI = async (e) => {
     e.preventDefault(); // 기본 동작 방지
-    const url = `http://${IP_ADDRESS}:${PORT}/auth/signup`;
+    const url = `http://${IP_ADDRESS}:${PORT}/signup`;
 
     try {
       const response = await fetch(url, {
@@ -115,6 +117,7 @@ const Signup = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
+        navigate('/mainpage');
       } else {
         console.error('Signup failed:', statusRes);
       }
