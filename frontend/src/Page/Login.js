@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header, Footer } from '../Component';
-import { PORT, IP_ADDRESS } from '../Secret/env';
+import { PORT, IP_ADDRESS, CLIENT_ID } from '../Secret/env';
 
 const StyledContainer = styled.div`
   height: 100vh;
@@ -79,25 +79,11 @@ const Login = () => {
     navigate('/signup');
   };
 
-  const KakaoLogin = async (e) => {
-    e.preventDefault(); // 기본 동작 방지
-    const url = `http://${IP_ADDRESS}:${PORT}/auth/kakao`;
+  const KakaoLogin = () => {
+    const redirectUri = `http://${IP_ADDRESS}:${PORT}/auth/kakao/callback`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code`;
 
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-      });
-
-      const statusRes = response.status;
-
-      if (response.ok) {
-        console.log(response);
-      } else {
-        console.error('KakaoLogin failed:', statusRes);
-      }
-    } catch (error) {
-      console.error('Network or other error:', error);
-    }
+    window.location.href = kakaoAuthUrl;
   };
 
   return (
@@ -133,17 +119,21 @@ const Login = () => {
 
             <div className="row mb-3">
               <div className="col">
-                <StyledButton className="btn btn-light" onClick={KakaoLogin}>
+                <StyledButton
+                  type="button"
+                  className="btn btn-light"
+                  onClick={KakaoLogin}
+                >
                   카카오로 로그인
                 </StyledButton>
               </div>
               <div className="col">
-                <StyledButton className="btn btn-light" disabled>
+                <StyledButton type="button" className="btn btn-light" disabled>
                   네이버로 로그인
                 </StyledButton>
               </div>
               <div className="col">
-                <StyledButton className="btn btn-light" disabled>
+                <StyledButton type="button" className="btn btn-light" disabled>
                   구글로 로그인
                 </StyledButton>
               </div>
@@ -155,7 +145,11 @@ const Login = () => {
 
             <Divider />
 
-            <StyledButton className="btn btn-success" onClick={navigateSignUp}>
+            <StyledButton
+              type="button"
+              className="btn btn-success"
+              onClick={navigateSignUp}
+            >
               회원가입
             </StyledButton>
           </form>

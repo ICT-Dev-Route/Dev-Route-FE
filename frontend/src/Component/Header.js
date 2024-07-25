@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { LOGO } from '../Assets';
 
 // Styled components
@@ -56,7 +56,10 @@ const NavItem = styled.li`
   font-weight: 600;
 `;
 
-const NavLink = styled(Link)`
+// StyledNavLink는 isActive prop을 전달하지 않습니다.
+const StyledNavLink = styled(Link).attrs(({ isActive, ...props }) => ({
+  ...props,
+}))`
   text-decoration: none;
   padding: 0.5rem 1rem;
   color: ${({ theme, isActive }) =>
@@ -103,6 +106,8 @@ const StyledButton = styled(Link)`
 `;
 
 const Header = ({ page }) => {
+  const location = useLocation();
+
   return (
     <HeaderContainer>
       <StyledContainer>
@@ -125,67 +130,67 @@ const Header = ({ page }) => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <NavbarNav className="navbar-nav">
               <NavItem className="nav-item">
-                <NavLink
+                <StyledNavLink
                   className="nav-link"
                   to="/mainpage"
-                  isActive={page === 'mainpage'}
+                  isActive={location.pathname === '/mainpage'}
                 >
                   홈
-                </NavLink>
+                </StyledNavLink>
               </NavItem>
               <NavItem className="nav-item">
-                <NavLink
+                <StyledNavLink
                   className="nav-link"
                   to="/developerDescription"
-                  isActive={page === 'developerDescription'}
+                  isActive={location.pathname === '/developerDescription'}
                 >
                   개발자 설명
-                </NavLink>
+                </StyledNavLink>
               </NavItem>
               <NavItem className="nav-item">
-                <NavLink
+                <StyledNavLink
                   className="nav-link"
                   to="/roadmap"
-                  isActive={page === 'roadmap'}
+                  isActive={location.pathname === '/roadmap'}
                 >
                   개발자별 로드맵
-                </NavLink>
+                </StyledNavLink>
               </NavItem>
               <NavItem className="nav-item">
-                <NavLink
+                <StyledNavLink
                   className="nav-link"
                   to="/companySearch"
-                  isActive={page === 'companySearch'}
+                  isActive={location.pathname === '/companySearch'}
                 >
                   기업 검색
-                </NavLink>
+                </StyledNavLink>
               </NavItem>
               <NavItem className="nav-item">
-                <NavLink
+                <StyledNavLink
                   className="nav-link"
                   to="/jobSearch"
-                  isActive={page === 'jobSearch'}
+                  isActive={location.pathname === '/jobSearch'}
                 >
                   직무 검색
-                </NavLink>
+                </StyledNavLink>
               </NavItem>
               <NavItem className="nav-item">
-                <NavLink
+                <StyledNavLink
                   className="nav-link"
                   to="/courseSearch"
-                  isActive={page === 'courseSearch'}
+                  isActive={location.pathname === '/courseSearch'}
                 >
                   강의 추천
-                </NavLink>
+                </StyledNavLink>
               </NavItem>
               <NavItem className="nav-item">
-                <NavLink
+                <StyledNavLink
                   className="nav-link"
                   to="/errorInquiry"
-                  isActive={page === 'errorInquiry'}
+                  isActive={location.pathname === '/errorInquiry'}
                 >
                   문의 사항
-                </NavLink>
+                </StyledNavLink>
               </NavItem>
             </NavbarNav>
           </div>
