@@ -1,5 +1,3 @@
-// Header.js
-
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -12,14 +10,16 @@ const HeaderContainer = styled.header`
 `;
 
 const StyledContainer = styled.div`
-  width: 70%;
+  width: 80%;
   margin: 0 auto; /* Center the container */
+  display: flex;
+  justify-content: space-between; /* Space between brand and nav */
+  align-items: center;
 `;
 
 const Navbar = styled.nav`
   background-color: #f8f9fa;
   display: flex;
-  justify-content: center; /* Center the navbar */
   align-items: center;
 `;
 
@@ -30,7 +30,7 @@ const NavbarBrand = styled(Link)`
   color: #000;
   font-size: 21px;
   font-weight: 600;
-  margin-right: auto; /* Align the brand to the left */
+  margin-right: 3rem;
 
   img {
     width: 50px;
@@ -41,7 +41,6 @@ const NavbarBrand = styled(Link)`
 const CollapseButton = styled.button`
   background-color: transparent;
   border: none;
-  margin-left: auto; /* Align the button to the right */
 `;
 
 const NavbarNav = styled.div`
@@ -72,12 +71,43 @@ const NavLink = styled(Link)`
   }
 `;
 
+const NavButtons = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const StyledButton = styled(Link)`
+  padding: 0.5rem 1rem;
+  border: 1px solid #28a745;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #28a745;
+  font-size: 16px;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #218838;
+    color: #fff;
+  }
+
+  &.outline {
+    background-color: transparent;
+    color: #28a745;
+
+    &:hover {
+      background-color: #28a745;
+      color: #fff;
+    }
+  }
+`;
+
 const Header = ({ page }) => {
   return (
     <HeaderContainer>
       <StyledContainer>
         <Navbar className="navbar navbar-expand-lg">
-          <NavbarBrand to="/">
+          <NavbarBrand to="/mainpage">
             <img src={LOGO} alt="DevRoute Logo" />
             DevRoute
           </NavbarBrand>
@@ -160,6 +190,12 @@ const Header = ({ page }) => {
             </NavbarNav>
           </div>
         </Navbar>
+        <NavButtons>
+          <StyledButton to="/login" className="outline">
+            로그인
+          </StyledButton>
+          <StyledButton to="/signup">회원가입</StyledButton>
+        </NavButtons>
       </StyledContainer>
     </HeaderContainer>
   );

@@ -10,6 +10,8 @@ import {
   ErrorInquiry,
   JobSearch,
   Roadmap,
+  Login,
+  Signup,
 } from './Page';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme';
@@ -29,6 +31,8 @@ const App = () => {
           <Route path="/errorInquiry" element={<ErrorInquiry />} />
           <Route path="/jobSearch" element={<JobSearch />} />
           <Route path="/roadmap" element={<Roadmap />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </Router>
     </ThemeProvider>
