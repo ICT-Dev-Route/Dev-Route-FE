@@ -2,7 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header, Footer } from '../Component';
-import { PORT, IP_ADDRESS, CLIENT_ID } from '../Secret/env';
+import {
+  PORT,
+  IP_ADDRESS,
+  KAKAO_CLIENT_ID,
+  NAVER_CLIENT_ID,
+  NAVER_CLIENT_SECRET,
+  GOOGLE_CLIENT_ID,
+} from '../Secret/env';
 
 const StyledContainer = styled.div`
   height: 100vh;
@@ -79,13 +86,35 @@ const Login = () => {
     navigate('/signup');
   };
 
+  const generateState = () => {
+    return (
+      Math.random().toString(36).substring(2) +
+      new Date().getTime().toString(36)
+    );
+  };
+
   const KakaoLogin = () => {
     const redirectUri = `http://${IP_ADDRESS}:${PORT}/auth/kakao/callback`;
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code`;
 
     window.location.href = kakaoAuthUrl;
   };
 
+  const NaverLogin = () => {
+    const state = generateState();
+    localStorage.setItem('naverState', state);
+    const redirectUri = `http://${IP_ADDRESS}:${PORT}/auth/naver/callback`;
+    const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&state=${state}`;
+
+    window.location.href = naverAuthUrl;
+  };
+
+  const GoogleLogin = () => {
+    const redirectUri = `http://${IP_ADDRESS}:${PORT}/auth/google/callback`;
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=email%20profile%20openid&access_type=offline`;
+
+    window.location.href = googleAuthUrl;
+  };
   return (
     <>
       <Header />
@@ -128,12 +157,20 @@ const Login = () => {
                 </StyledButton>
               </div>
               <div className="col">
-                <StyledButton type="button" className="btn btn-light" disabled>
+                <StyledButton
+                  type="button"
+                  className="btn btn-light"
+                  onClick={NaverLogin}
+                >
                   네이버로 로그인
                 </StyledButton>
               </div>
               <div className="col">
-                <StyledButton type="button" className="btn btn-light" disabled>
+                <StyledButton
+                  type="button"
+                  className="btn btn-light"
+                  onClick={GoogleLogin}
+                >
                   구글로 로그인
                 </StyledButton>
               </div>
