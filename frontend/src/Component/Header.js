@@ -56,10 +56,7 @@ const NavItem = styled.li`
   font-weight: 600;
 `;
 
-// StyledNavLink는 isActive prop을 전달하지 않습니다.
-const StyledNavLink = styled(Link).attrs(({ isActive, ...props }) => ({
-  ...props,
-}))`
+const StyledNavLink = styled(Link)`
   text-decoration: none;
   padding: 0.5rem 1rem;
   color: ${({ theme, isActive }) =>
@@ -107,6 +104,7 @@ const StyledButton = styled(Link)`
 
 const Header = ({ page }) => {
   const location = useLocation();
+  const token = localStorage.getItem('token');
 
   return (
     <HeaderContainer>
@@ -196,10 +194,16 @@ const Header = ({ page }) => {
           </div>
         </Navbar>
         <NavButtons>
-          <StyledButton to="/login" className="outline">
-            로그인
-          </StyledButton>
-          <StyledButton to="/signup">회원가입</StyledButton>
+          {token ? (
+            <StyledButton to="/Favorites">스크랩 확인하기</StyledButton>
+          ) : (
+            <>
+              <StyledButton to="/login" className="outline">
+                로그인
+              </StyledButton>
+              <StyledButton to="/signup">회원가입</StyledButton>
+            </>
+          )}
         </NavButtons>
       </StyledContainer>
     </HeaderContainer>
