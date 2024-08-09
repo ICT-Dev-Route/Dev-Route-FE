@@ -5,7 +5,7 @@ function JobSearch() {
   return (
     <>
       <Header page="jobSearch"></Header>
-      <div>This is Roadmap</div>
+      <div>This is JobSearch</div>
       <Footer></Footer>
     </>
   );
