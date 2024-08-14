@@ -58,7 +58,7 @@ const MainPage = () => {
         <MainpageBanner />
         <SponsorContainer />
         <VideoCards />
-        <VisitorStats />
+        {/* <VisitorStats /> */}
       </MainContainer>
       <Footer />
     </>

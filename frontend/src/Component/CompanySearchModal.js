@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TechStackList from './TechStackList';
 import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
+import { IP_ADDRESS, PORT } from '../Secret/env';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -38,7 +39,7 @@ const CompanyHeader = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 20px; // Space between header and list
+  margin-bottom: 40px; // Space between header and list
 `;
 
 const Logo = styled.img`
@@ -92,8 +93,38 @@ const renderStars = (rating) => {
   return stars;
 };
 
-function CompanySearchModal({ show, company, onClose }) {
-  if (!show || !company) {
+function CompanySearchModal({ show, company, companyID = 1, onClose }) {
+  const [companyDetail, setCompanyDetail] = useState();
+  useEffect(() => {
+    const CompanyInfo = async () => {
+      const url = `http://${IP_ADDRESS}:${PORT}/recruit/company/${companyID}`;
+      const token = localStorage.getItem('token');
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setCompanyDetail(data);
+        console.log('recruit', data);
+      } catch (error) {
+        console.error('Failed to fetch tech stack:', error);
+      }
+    };
+
+    if (companyID) {
+      CompanyInfo();
+    }
+  }, []);
+  if (!show || !companyDetail) {
     return null;
   }
 
@@ -101,21 +132,27 @@ function CompanySearchModal({ show, company, onClose }) {
     <ModalOverlay show={show} onClick={onClose}>
       <CompanyModal onClick={(e) => e.stopPropagation()}>
         <CompanyHeader>
-          <Logo src={company.logo} alt={`${company.name} Logo`} />
+          <Logo src={companyDetail.logo} alt={`${companyDetail.name} Logo`} />
           <DetailsContainer>
-            <CompanyName>{company.name}</CompanyName>
+            <CompanyName>{companyDetail.name}</CompanyName>
             <CompanyInfo>
-              {company.description || 'No description available.'}
+              {companyDetail.info || 'No description available.'}
             </CompanyInfo>
             <Rating>
-              <strong>Rating:</strong> {renderStars(company.rating)}
+              <strong>Rating:</strong> {renderStars(companyDetail.grade)}
             </Rating>
             <Salary>
-              <strong>Average Salary:</strong> {company.averageSalary} 만원
+              <strong>Average Salary:</strong> {companyDetail.averageSalary}{' '}
+              만원
             </Salary>
           </DetailsContainer>
         </CompanyHeader>
-        <TechStackList items={company.techStackData} />
+
+        {companyDetail.recruitments && companyDetail.recruitments.length > 0 ? (
+          <TechStackList items={companyDetail.recruitments} />
+        ) : (
+          <h3>채용공고가 없습니다.</h3>
+        )}
       </CompanyModal>
     </ModalOverlay>
   );

@@ -85,15 +85,15 @@ const renderStars = (rating) => {
 const CompanyListItem = ({ company, onClick }) => {
   return (
     <Item onClick={onClick}>
-      <Logo src={company.logo} alt={`${company.name} Logo`} />
+      <Logo src={company.logoUrl} alt={`${company.name} Logo`} />
       <InfoContainer>
         <NameAndPosts>
           <Name>{company.name}</Name>
-          <Details>모집중인 구인공고 수: {company.jobPostings}개</Details>
+          <Details>모집중인 구인공고 수: {company.recruitmentCount}개</Details>
         </NameAndPosts>
         <RatingsAndSalary>
-          <Rating>{renderStars(company.rating)}</Rating>
-          <Salary>{company.averageSalary} 만원</Salary>
+          <Rating>{renderStars(company.grade)}</Rating>
+          <Salary>{company.salary} 만원</Salary>
         </RatingsAndSalary>
       </InfoContainer>
     </Item>

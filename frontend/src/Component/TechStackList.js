@@ -33,10 +33,10 @@ const TechStackList = ({ items }) => (
     <tbody>
       {items.map((item, index) => (
         <tr key={index}>
-          <td>{item.company}</td>
-          <td>{item.jobTitle}</td>
-          <td>{item.tech}</td>
-          <td>{item.date}</td>
+          <td>{item.companyName}</td>
+          <td>{item.developField}</td>
+          <td>{item.techStacks.join(', ')}</td>
+          <td>{item.dueDate}</td>
         </tr>
       ))}
     </tbody>
