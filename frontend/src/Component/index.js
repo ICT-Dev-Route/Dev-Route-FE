@@ -6,6 +6,8 @@ import VideoCards from './VideoCards';
 import VisitorStats from './VisitorStats';
 import CompanySearchModal from './CompanySearchModal';
 import CompanyListContainer from './CompanyListContainer';
+import TechStackList from './TechStackList';
+import JobCategorySelector from './JobCategorySelector';
 
 export {
   Header,
@@ -16,4 +18,6 @@ export {
   VisitorStats,
   CompanySearchModal,
   CompanyListContainer,
+  TechStackList,
+  JobCategorySelector,
 };
