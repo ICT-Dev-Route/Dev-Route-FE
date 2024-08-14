@@ -96,8 +96,13 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const SignupAPI = async (e) => {
-    e.preventDefault(); // 기본 동작 방지
+    e.preventDefault();
     const url = `http://${IP_ADDRESS}:${PORT}/signup`;
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
 
     try {
       const response = await fetch(url, {
@@ -112,14 +117,13 @@ const Signup = () => {
           development_field: developmentField,
         }),
       });
-      const statusRes = response.status;
 
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-        navigate('/mainpage');
+        navigate('/login');
       } else {
-        console.error('Signup failed:', statusRes);
+        console.error('Signup failed:', response.status);
       }
     } catch (error) {
       console.error('Network or other error:', error);

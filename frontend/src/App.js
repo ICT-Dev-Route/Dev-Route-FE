@@ -12,6 +12,7 @@ import {
   Roadmap,
   Login,
   Signup,
+  Favorites,
 } from './Page';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme';
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/roadmap" element={<Roadmap />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/favorites" element={<Favorites />} />
         </Routes>
       </Router>
     </ThemeProvider>

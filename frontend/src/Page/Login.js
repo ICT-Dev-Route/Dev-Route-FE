@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header, Footer } from '../Component';
@@ -81,6 +81,8 @@ const Divider = styled.hr`
 
 const Login = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
 
   const navigateSignUp = () => {
     navigate('/signup');
@@ -91,6 +93,34 @@ const Login = () => {
       Math.random().toString(36).substring(2) +
       new Date().getTime().toString(36)
     );
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    const url = `http://${IP_ADDRESS}:${PORT}/login`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const token = response.headers.get('Authorization');
+      localStorage.setItem('token', token);
+      navigate('/mainpage'); // Navigate to dashboard on success
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
   const KakaoLogin = () => {
@@ -121,75 +151,75 @@ const Login = () => {
       <StyledContainer>
         <LoginForm>
           <Title>DevRoute</Title>
-          <form>
-            <div className="mb-3">
-              <IconLabel htmlFor="formBasicEmail">
-                <i className="bi bi-envelope"></i> 이메일
-              </IconLabel>
-              <StyledInput
-                type="email"
-                className="form-control"
-                id="formBasicEmail"
-                placeholder="이메일"
-              />
+          <div className="mb-3">
+            <IconLabel htmlFor="formBasicEmail">
+              <i className="bi bi-envelope"></i> 이메일
+            </IconLabel>
+            <StyledInput
+              type="email"
+              id="formBasicEmail"
+              placeholder="이메일"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <IconLabel htmlFor="formBasicPassword">
+              <i className="bi bi-key"></i> 비밀번호
+            </IconLabel>
+            <StyledInput
+              type="password"
+              id="formBasicPassword"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="row mb-3">
+            <div className="col">
+              <StyledButton
+                type="button"
+                className="btn btn-light"
+                onClick={KakaoLogin}
+              >
+                카카오로 로그인
+              </StyledButton>
             </div>
-
-            <div className="mb-3">
-              <IconLabel htmlFor="formBasicPassword">
-                <i className="bi bi-key"></i> 비밀번호
-              </IconLabel>
-              <StyledInput
-                type="password"
-                className="form-control"
-                id="formBasicPassword"
-                placeholder="비밀번호"
-              />
+            <div className="col">
+              <StyledButton
+                type="button"
+                className="btn btn-light"
+                onClick={NaverLogin}
+              >
+                네이버로 로그인
+              </StyledButton>
             </div>
-
-            <div className="row mb-3">
-              <div className="col">
-                <StyledButton
-                  type="button"
-                  className="btn btn-light"
-                  onClick={KakaoLogin}
-                >
-                  카카오로 로그인
-                </StyledButton>
-              </div>
-              <div className="col">
-                <StyledButton
-                  type="button"
-                  className="btn btn-light"
-                  onClick={NaverLogin}
-                >
-                  네이버로 로그인
-                </StyledButton>
-              </div>
-              <div className="col">
-                <StyledButton
-                  type="button"
-                  className="btn btn-light"
-                  onClick={GoogleLogin}
-                >
-                  구글로 로그인
-                </StyledButton>
-              </div>
+            <div className="col">
+              <StyledButton
+                type="button"
+                className="btn btn-light"
+                onClick={GoogleLogin}
+              >
+                구글로 로그인
+              </StyledButton>
             </div>
+          </div>
 
-            <StyledButton className="btn btn-success" type="submit">
-              로그인
-            </StyledButton>
+          <StyledButton className="btn btn-success" onClick={handleLogin}>
+            로그인
+          </StyledButton>
 
-            <Divider />
+          <Divider />
 
-            <StyledButton
-              type="button"
-              className="btn btn-success"
-              onClick={navigateSignUp}
-            >
-              회원가입
-            </StyledButton>
-          </form>
+          <StyledButton
+            type="button"
+            className="btn btn-success"
+            onClick={navigateSignUp}
+          >
+            회원가입
+          </StyledButton>
         </LoginForm>
       </StyledContainer>
       <Footer />

@@ -14,7 +14,7 @@ const SponsorSection = styled.div`
 const SponsorContainer = () => {
   return (
     <SponsorSection>
-      <h3>Our Sponsor</h3>
+      <h3>도움을 받은 서비스 및 스폰서</h3>
       <div>
         <img
           src="https://via.placeholder.com/150x50?text=Sponsor+1"
