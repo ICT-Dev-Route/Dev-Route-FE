@@ -44,7 +44,11 @@ const MainPage = () => {
       }
     };
 
-    fetchToken();
+    // Check if token is null or not present in localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      fetchToken();
+    }
   }, [navigate]);
 
   return (

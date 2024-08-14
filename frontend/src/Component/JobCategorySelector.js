@@ -4,7 +4,7 @@ import styled from 'styled-components';
 // 스타일이 적용된 전체 컨테이너
 const CategoryContainer = styled.div`
   background-color: #f8f9fa; // 밝은 회색 배경
-  padding: 10px 0; // 상하 패딩만 지정
+  padding: 15px 0; // 상하 패딩만 지정
   border-radius: 8px; // 모서리 둥글게
 `;
 

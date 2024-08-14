@@ -7,6 +7,7 @@ import MainPage from './MainPage';
 import Roadmap from './Roadmap';
 import Login from './Login';
 import Signup from './Signup';
+import Favorites from './Favorites';
 
 export {
   CompanySearch,
@@ -18,4 +19,5 @@ export {
   Roadmap,
   Login,
   Signup,
+  Favorites,
 };
