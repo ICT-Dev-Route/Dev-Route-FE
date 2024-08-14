@@ -1,164 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Header,
   Footer,
   CompanySearchModal,
   CompanyListContainer,
 } from '../Component';
-import styled from 'styled-components';
+import { IP_ADDRESS, PORT } from '../Secret/env';
 
 function CompanySearch() {
-  const [companies, setCompanies] = useState([
-    {
-      id: 1,
-      name: 'Kakao',
-      logo: 'https://via.placeholder.com/50',
-      jobPostings: 3,
-      rating: 4.5,
-      averageSalary: '4800',
-      techStackData: [
-        {
-          company: 'Kakao',
-          jobTitle: 'Frontend Developer',
-          tech: 'HTML, CSS, JavaScript, React',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Backend Developer',
-          tech: 'Node.js, Express, MongoDB, Docker',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Data Analyst',
-          tech: 'Python, SQL, Tableau, Hadoop',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'AI Researcher',
-          tech: 'Python, TensorFlow, PyTorch, Keras',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Mobile Developer',
-          tech: 'Swift, Kotlin, Firebase, Xcode',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'UI/UX Designer',
-          tech: 'VueJS, TypeScript, Nuxt.js, Figma',
-          date: '2024/02/16',
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Naver',
-      logo: 'https://via.placeholder.com/50',
-      jobPostings: 5,
-      rating: 3.7,
-      averageSalary: '5100',
-      techStackData: [
-        {
-          company: 'Kakao',
-          jobTitle: 'Frontend Developer',
-          tech: 'HTML, CSS, JavaScript, React',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Backend Developer',
-          tech: 'Node.js, Express, MongoDB, Docker',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Data Analyst',
-          tech: 'Python, SQL, Tableau, Hadoop',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'AI Researcher',
-          tech: 'Python, TensorFlow, PyTorch, Keras',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Mobile Developer',
-          tech: 'Swift, Kotlin, Firebase, Xcode',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'UI/UX Designer',
-          tech: 'VueJS, TypeScript, Nuxt.js, Figma',
-          date: '2024/02/16',
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: 'Coupang',
-      logo: 'https://via.placeholder.com/50',
-      jobPostings: 2,
-      rating: 2.2,
-      averageSalary: '3600',
-      techStackData: [
-        {
-          company: 'Kakao',
-          jobTitle: 'Frontend Developer',
-          tech: 'HTML, CSS, JavaScript, React',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Backend Developer',
-          tech: 'Node.js, Express, MongoDB, Docker',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Data Analyst',
-          tech: 'Python, SQL, Tableau, Hadoop',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'AI Researcher',
-          tech: 'Python, TensorFlow, PyTorch, Keras',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'Mobile Developer',
-          tech: 'Swift, Kotlin, Firebase, Xcode',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Kakao',
-          jobTitle: 'UI/UX Designer',
-          tech: 'VueJS, TypeScript, Nuxt.js, Figma',
-          date: '2024/02/16',
-        },
-      ],
-    },
-  ]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [companies, setCompanies] = useState([]);
+  const [selectedCompanyId, setSelectedCompanyId] = useState(null);
+  const [selectedCompanyDetails, setSelectedCompanyDetails] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   const handleCompanyClick = (company) => {
-    setSelectedCompany(company);
+    setSelectedCompanyId(company.id);
+    // 회사 상세 정보 설정
+    const foundCompany = companies.find((c) => c.id === company.id);
+    setSelectedCompanyDetails(foundCompany);
+    console.log('ID : ', company.id);
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setSelectedCompanyDetails(null); // 모달 닫을 때 상세 정보 초기화
   };
+
+  useEffect(() => {
+    const CompanyInfo = async () => {
+      const url = `http://${IP_ADDRESS}:${PORT}/recruit/enterprise`;
+      const token = localStorage.getItem('token');
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`, // 'Bearer' 접두사 추가
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setCompanies(data);
+        console.log('recruit', data);
+      } catch (error) {
+        console.error('Failed to fetch companies:', error);
+      }
+    };
+    CompanyInfo();
+  }, []);
 
   return (
     <>
@@ -167,11 +61,14 @@ function CompanySearch() {
         companies={companies}
         onCompanyClick={handleCompanyClick}
       />
-      <CompanySearchModal
-        show={showModal}
-        company={selectedCompany}
-        onClose={handleCloseModal}
-      />
+      {showModal && selectedCompanyDetails && (
+        <CompanySearchModal
+          show={showModal}
+          company={selectedCompanyDetails}
+          companyID={selectedCompanyDetails.id}
+          onClose={handleCloseModal}
+        />
+      )}
       <Footer />
     </>
   );
