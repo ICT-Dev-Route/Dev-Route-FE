@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom'; // useNavigate 훅을 가져옵니다.
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Treebeard } from 'react-treebeard';
 import { Header, Footer, RoadmapCategorySelector } from '../Component';
 import { PORT, IP_ADDRESS } from '../Secret/env';
@@ -64,13 +64,13 @@ const styles = {
       },
       toggle: {
         base: {
-          display: 'none', // Hide the toggle base
+          display: 'none',
         },
         wrapper: {
-          display: 'none', // Hide the toggle wrapper
+          display: 'none',
         },
         arrow: {
-          display: 'none', // Hide the toggle arrow
+          display: 'none',
         },
       },
       header: {
@@ -117,11 +117,17 @@ const RedButton = styled.button`
 `;
 
 const Roadmap = () => {
-  const [selectedCategory, setSelectedCategory] = useState('frontend');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const initialRoadmapId = location.state?.roadmapId;
+  const initialDevelopmentField = location.state?.developmentField;
+
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialDevelopmentField || 'frontend'
+  );
   const [treeData, setTreeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [nodeDetail, setNodeDetail] = useState(null);
-  const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
 
   useEffect(() => {
     async function fetchData() {
@@ -141,8 +147,15 @@ const Roadmap = () => {
             children: [],
           }));
           setTreeData(initialData);
-          setSelectedNode(initialData[0]);
-          fetchNodeDetail(initialData[0].name);
+
+          // ID에 해당하는 로드맵을 선택
+          const initialSelectedNode = initialData.find(
+            (node) => node.id === initialRoadmapId
+          );
+          if (initialSelectedNode) {
+            setSelectedNode(initialSelectedNode);
+            fetchNodeDetail(initialSelectedNode.name);
+          }
         } else {
           console.error('RoadmapDTOs가 응답에 없습니다.');
         }
@@ -152,7 +165,7 @@ const Roadmap = () => {
     }
 
     fetchData();
-  }, [selectedCategory]);
+  }, [selectedCategory, initialRoadmapId]);
 
   const fetchNodeDetail = async (nodeName) => {
     try {
@@ -182,14 +195,6 @@ const Roadmap = () => {
 
   const handleScrapButtonClick = async () => {
     const token = localStorage.getItem('token');
-
-    if (!token) {
-      alert('로그인 후 이용가능합니다!');
-      navigate('/login');
-      return;
-    }
-    console.log(token);
-
     try {
       const response = await fetch(
         `http://${IP_ADDRESS}:${PORT}/bookmark/add`,
@@ -205,6 +210,8 @@ const Roadmap = () => {
           }),
         }
       );
+
+      console.log(selectedNode.id);
 
       if (!response.ok) {
         if (response.status === 400) {
@@ -235,7 +242,7 @@ const Roadmap = () => {
               data={treeData}
               onToggle={onToggle}
               style={styles}
-              animations={false} // Disable animations to prevent VelocityComponent errors
+              animations={false}
             />
           )}
         </TreeContainer>

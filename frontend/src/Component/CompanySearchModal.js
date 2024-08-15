@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import TechStackList from './TechStackList';
 import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import { IP_ADDRESS, PORT } from '../Secret/env';
 import { useNavigate } from 'react-router-dom';
+import TechStackList from './TechStackList';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -159,7 +159,7 @@ function CompanySearchModal({ show, companyID, onClose }) {
             Authorization: `${token}`,
           },
           body: JSON.stringify({
-            id: companyDetail.id, 
+            id: companyDetail.id,
             type: 'company',
           }),
         }
