@@ -1,21 +1,81 @@
-import React, { useState } from 'react';
-import { Header, Footer } from '../Component';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { Header, Footer, JobSelectionModal } from '../Component';
+import { IP_ADDRESS, PORT } from '../Secret/env';
+
+const Container = styled.div`
+  margin: 50px auto; /* 위아래 50px의 마진 설정 */
+`;
 
 function CourseSearch() {
   const [platform, setPlatform] = useState('youtube');
+  const [techName, setTechName] = useState('htmlcss');
+  const [courses, setCourses] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    fetchCourses(platform, techName);
+  }, [platform, techName]);
+
+  const fetchCourses = async (platformName, techName) => {
+    try {
+      const platformMap = {
+        youtube: 'Youtube',
+        inflearn: 'Inflearn',
+        udemy: 'Udemy',
+      };
+
+      const response = await fetch(
+        `http://${IP_ADDRESS}:${PORT}/lecture?platform_name=${platformMap[platformName]}&tech_name=${techName}`
+      );
+
+      if (!response.ok) {
+        throw new Error('서버 응답에 문제가 있습니다.');
+      }
+
+      const data = await response.json();
+      setCourses(data);
+    } catch (error) {
+      console.error('강의를 불러오는 데 실패했습니다:', error);
+    }
+  };
+
+  const openCourse = (url) => {
+    window.open(url, '_blank');
+  };
+
+  const handleTechInputClick = () => {
+    setShowModal(true); // 모달 열기
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false); // 모달 닫기
+  };
+
+  const handleTechSelection = (tech) => {
+    setTechName(tech); // 선택한 기술 스택 설정
+    setShowModal(false); // 모달 닫기
+  };
 
   return (
     <>
       <Header page="CourseSearch" />
-      <div className="container">
-        <div className="search-bar d-flex justify-content-start align-items-center mt-4">
+      <Container className="container">
+        <div className="search-bar d-flex justify-content-start align-items-center">
           <input
             type="text"
             className="form-control"
             placeholder="기술스택 선택하기"
+            value={techName}
             style={{ width: '300px' }}
+            readOnly // 사용자가 직접 입력할 수 없도록 설정
           />
-          <button className="btn btn-success ms-2">검색</button>
+          <button
+            className="btn btn-success"
+            onClick={handleTechInputClick} // 클릭 시 모달 열기
+          >
+            검색
+          </button>
 
           <div className="btn-group ms-3" role="group">
             <input
@@ -59,190 +119,39 @@ function CourseSearch() {
         </div>
 
         <div className="row mt-4">
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
+          {courses.map((course, index) => (
+            <div className="col-md-3 mb-4" key={index}>
+              <div
+                className="card"
+                style={{ width: '100%', cursor: 'pointer' }}
+                onClick={() => openCourse(course.url)} // 카드 클릭 시 URL 새 창에서 열기
+              >
+                <img
+                  src={course.thumnail_url || 'https://via.placeholder.com/150'}
+                  className="card-img-top"
+                  alt="Thumbnail"
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{course.title}</h5>
+                  <p className="card-text">{course.description}</p>
+                  <p className="card-text">
+                    <small className="text-muted">
+                      {course.views} views · {course.uploaded_time} ago
+                    </small>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          {/* Repeat similar cards as needed */}
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <img
-                src="https://via.placeholder.com/150"
-                className="card-img-top"
-                alt="Thumbnail"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Lorem ipsum dolor sit amet</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet (Official Audio)
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">10k views · 2 hours ago</small>
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* Add more cards as per requirement */}
+          ))}
         </div>
-      </div>
+      </Container>
+
+      <JobSelectionModal
+        show={showModal}
+        onClose={handleModalClose}
+        onSelectTech={handleTechSelection}
+      />
+
       <Footer />
     </>
   );
