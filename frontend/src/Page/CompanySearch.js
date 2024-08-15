@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom'; // useLocation 훅 사용
 import {
   Header,
   Footer,
@@ -17,26 +18,14 @@ const CompanySearchPageContainer = styled.div`
 
 function CompanySearch() {
   const [companies, setCompanies] = useState([]);
-  const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [selectedCompanyDetails, setSelectedCompanyDetails] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const handleCompanyClick = (company) => {
-    setSelectedCompanyId(company.id);
-    // 회사 상세 정보 설정
-    const foundCompany = companies.find((c) => c.id === company.id);
-    setSelectedCompanyDetails(foundCompany);
-    console.log('ID : ', company.id);
-    setShowModal(true);
-  };
+  const location = useLocation();
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedCompanyDetails(null); // 모달 닫을 때 상세 정보 초기화
-  };
-
+  // 페이지가 로드될 때 회사 목록을 불러오고, 만약 state에 companyId가 있으면 해당 회사를 선택
   useEffect(() => {
-    const CompanyInfo = async () => {
+    const fetchCompanyInfo = async () => {
       const url = `http://${IP_ADDRESS}:${PORT}/recruit/enterprise`;
 
       try {
@@ -52,13 +41,49 @@ function CompanySearch() {
         }
         const data = await response.json();
         setCompanies(data);
-        console.log('recruit', data);
+
+        // location.state에서 companyId 가져오기
+        const companyIdFromState = location.state?.companyId;
+        console.log('companyIdFromState:', companyIdFromState);
+
+        if (companyIdFromState) {
+          const foundCompany = data.find(
+            (company) => company.id === companyIdFromState
+          );
+          console.log('foundCompany:', foundCompany);
+
+          if (foundCompany) {
+            setSelectedCompanyDetails(foundCompany);
+            setShowModal(true); // 모달 열기
+          } else {
+            console.log('Company not found');
+          }
+        } else {
+          console.log('No companyId in location.state');
+        }
       } catch (error) {
         console.error('Failed to fetch companies:', error);
       }
     };
-    CompanyInfo();
-  }, []);
+    fetchCompanyInfo();
+  }, [location.state]);
+
+  // 회사 카드를 클릭했을 때 호출되는 함수
+  const handleCompanyClick = (company) => {
+    console.log('handleCompanyClick:', company);
+    setSelectedCompanyDetails(company);
+    setShowModal(true); // 모달 열기
+  };
+
+  // 모달을 닫을 때 호출되는 함수
+  const handleCloseModal = () => {
+    console.log('Closing modal');
+    setShowModal(false);
+    setSelectedCompanyDetails(null); // 모달을 닫을 때 상세 정보를 초기화
+  };
+
+  console.log('showModal:', showModal);
+  console.log('selectedCompanyDetails:', selectedCompanyDetails);
 
   return (
     <>

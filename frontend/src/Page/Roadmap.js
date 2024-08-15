@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Treebeard } from 'react-treebeard';
 import { Header, Footer, RoadmapCategorySelector } from '../Component';
 import { PORT, IP_ADDRESS } from '../Secret/env';
@@ -26,6 +27,7 @@ const InfoContainer = styled.div`
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   color: #000;
+  position: relative; /* 우측 상단 버튼 위치를 위해 position 추가 */
 `;
 
 const Title = styled.h3`
@@ -62,13 +64,13 @@ const styles = {
       },
       toggle: {
         base: {
-          display: 'none', // Hide the toggle base
+          display: 'none',
         },
         wrapper: {
-          display: 'none', // Hide the toggle wrapper
+          display: 'none',
         },
         arrow: {
-          display: 'none', // Hide the toggle arrow
+          display: 'none',
         },
       },
       header: {
@@ -102,8 +104,27 @@ const styles = {
   },
 };
 
+const RedButton = styled.button`
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+`;
+
 const Roadmap = () => {
-  const [selectedCategory, setSelectedCategory] = useState('frontend');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const initialRoadmapId = location.state?.roadmapId;
+  const initialDevelopmentField = location.state?.developmentField;
+
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialDevelopmentField || 'frontend'
+  );
   const [treeData, setTreeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [nodeDetail, setNodeDetail] = useState(null);
@@ -126,8 +147,15 @@ const Roadmap = () => {
             children: [],
           }));
           setTreeData(initialData);
-          setSelectedNode(initialData[0]);
-          fetchNodeDetail(initialData[0].name);
+
+          // ID에 해당하는 로드맵을 선택
+          const initialSelectedNode = initialData.find(
+            (node) => node.id === initialRoadmapId
+          );
+          if (initialSelectedNode) {
+            setSelectedNode(initialSelectedNode);
+            fetchNodeDetail(initialSelectedNode.name);
+          }
         } else {
           console.error('RoadmapDTOs가 응답에 없습니다.');
         }
@@ -137,7 +165,7 @@ const Roadmap = () => {
     }
 
     fetchData();
-  }, [selectedCategory]);
+  }, [selectedCategory, initialRoadmapId]);
 
   const fetchNodeDetail = async (nodeName) => {
     try {
@@ -165,6 +193,41 @@ const Roadmap = () => {
     }
   };
 
+  const handleScrapButtonClick = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(
+        `http://${IP_ADDRESS}:${PORT}/bookmark/add`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({
+            id: selectedNode.id,
+            type: 'roadmap',
+          }),
+        }
+      );
+
+      console.log(selectedNode.id);
+
+      if (!response.ok) {
+        if (response.status === 400) {
+          alert('로그인 후 이용가능합니다!');
+          navigate('/login');
+        } else {
+          throw new Error('스크랩에 실패했습니다.');
+        }
+      } else {
+        alert('성공적으로 스크랩되었습니다.');
+      }
+    } catch (error) {
+      console.error('북마크 요청 중 오류가 발생했습니다:', error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -179,13 +242,14 @@ const Roadmap = () => {
               data={treeData}
               onToggle={onToggle}
               style={styles}
-              animations={false} // Disable animations to prevent VelocityComponent errors
+              animations={false}
             />
           )}
         </TreeContainer>
         <InfoContainer>
           {selectedNode && nodeDetail ? (
             <>
+              <RedButton onClick={handleScrapButtonClick}>스크랩</RedButton>
               <Title>
                 {selectedNode.name} - {nodeDetail.brief_info}
               </Title>

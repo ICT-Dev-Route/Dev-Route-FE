@@ -2,9 +2,23 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Header, Footer, JobSelectionModal } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
+import { FaRegBookmark } from 'react-icons/fa'; // 아이콘 사용
 
 const Container = styled.div`
   margin: 50px auto; /* 위아래 50px의 마진 설정 */
+`;
+
+const ScrapButton = styled.button`
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
 `;
 
 function CourseSearch() {
@@ -55,6 +69,44 @@ function CourseSearch() {
   const handleTechSelection = (tech) => {
     setTechName(tech); // 선택한 기술 스택 설정
     setShowModal(false); // 모달 닫기
+  };
+
+  const handleScrapClick = async (courseId) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('로그인 후 이용가능합니다!');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://${IP_ADDRESS}:${PORT}/bookmark/add`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({
+            id: courseId,
+            type: 'video',
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 400) {
+          alert('로그인 후 이용가능합니다!');
+        } else {
+          throw new Error('북마크 추가에 실패했습니다.');
+        }
+      } else {
+        alert('성공적으로 북마크에 추가되었습니다.');
+      }
+    } catch (error) {
+      console.error('북마크 요청 중 오류가 발생했습니다:', error);
+    }
   };
 
   return (
@@ -120,7 +172,14 @@ function CourseSearch() {
 
         <div className="row mt-4">
           {courses.map((course, index) => (
-            <div className="col-md-3 mb-4" key={index}>
+            <div
+              className="col-md-3 mb-4"
+              key={index}
+              style={{ position: 'relative' }}
+            >
+              <ScrapButton onClick={() => handleScrapClick(course.id)}>
+                <FaRegBookmark />
+              </ScrapButton>
               <div
                 className="card"
                 style={{ width: '100%', cursor: 'pointer' }}
