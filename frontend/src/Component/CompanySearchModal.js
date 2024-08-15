@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import TechStackList from './TechStackList';
 import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import { IP_ADDRESS, PORT } from '../Secret/env';
+import { useNavigate } from 'react-router-dom';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -40,6 +41,7 @@ const CompanyHeader = styled.div`
   align-items: center;
   width: 100%;
   margin-bottom: 40px;
+  position: relative;
 `;
 
 const Logo = styled.img`
@@ -75,6 +77,18 @@ const Salary = styled.span`
   font-weight: bold;
 `;
 
+const BookmarkButton = styled.button`
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
 const renderStars = (rating) => {
   const stars = [];
   const fullStars = Math.floor(rating);
@@ -93,10 +107,12 @@ const renderStars = (rating) => {
   return stars;
 };
 
-function CompanySearchModal({ show, company, companyID = 1, onClose }) {
-  const [companyDetail, setCompanyDetail] = useState();
+function CompanySearchModal({ show, companyID, onClose }) {
+  const [companyDetail, setCompanyDetail] = useState(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const CompanyInfo = async () => {
+    const fetchCompanyInfo = async () => {
       const url = `http://${IP_ADDRESS}:${PORT}/recruit/company/${companyID}`;
 
       try {
@@ -110,18 +126,60 @@ function CompanySearchModal({ show, company, companyID = 1, onClose }) {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
         setCompanyDetail(data);
         console.log('recruit', data);
       } catch (error) {
-        console.error('Failed to fetch tech stack:', error);
+        console.error('Failed to fetch company info:', error);
       }
     };
 
     if (companyID) {
-      CompanyInfo();
+      fetchCompanyInfo();
     }
-  }, []);
+  }, [companyID]);
+
+  const handleBookmarkClick = async () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('로그인 후 이용가능합니다!');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://${IP_ADDRESS}:${PORT}/bookmark/add`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({
+            id: companyDetail.id, 
+            type: 'company',
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 400) {
+          alert('로그인 후 이용가능합니다!');
+          navigate('/login');
+        } else {
+          throw new Error('북마크 추가에 실패했습니다.');
+        }
+      } else {
+        alert('성공적으로 북마크에 추가되었습니다.');
+      }
+    } catch (error) {
+      console.error('북마크 요청 중 오류가 발생했습니다:', error);
+    }
+  };
+
   if (!show || !companyDetail) {
     return null;
   }
@@ -130,7 +188,10 @@ function CompanySearchModal({ show, company, companyID = 1, onClose }) {
     <ModalOverlay show={show} onClick={onClose}>
       <CompanyModal onClick={(e) => e.stopPropagation()}>
         <CompanyHeader>
-          <Logo src={companyDetail.logo} alt={`${companyDetail.name} Logo`} />
+          <Logo
+            src={companyDetail.logoUrl}
+            alt={`${companyDetail.name} Logo`}
+          />
           <DetailsContainer>
             <CompanyName>{companyDetail.name}</CompanyName>
             <CompanyInfo>
@@ -144,6 +205,7 @@ function CompanySearchModal({ show, company, companyID = 1, onClose }) {
               만원
             </Salary>
           </DetailsContainer>
+          <BookmarkButton onClick={handleBookmarkClick}>북마크</BookmarkButton>
         </CompanyHeader>
 
         {companyDetail.recruitments && companyDetail.recruitments.length > 0 ? (
