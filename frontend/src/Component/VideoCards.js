@@ -1,25 +1,44 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
 import VideoCardItem from './VideoCardsItem';
+import { IP_ADDRESS, PORT } from '../Secret/env';
 
 const VideoCards = () => {
+  const [lectures, setLectures] = useState([]);
+
+  useEffect(() => {
+    const fetchLectures = async () => {
+      try {
+        const response = await fetch(
+          `http://${IP_ADDRESS}:${PORT}/main/lectures`
+        );
+        if (!response.ok) {
+          throw new Error('데이터를 불러오는데 실패했습니다.');
+        }
+        const data = await response.json();
+        setLectures(data);
+      } catch (error) {
+        console.error('Error fetching lectures:', error);
+      }
+    };
+
+    fetchLectures();
+  }, []);
+
+  const handleCardClick = (url) => {
+    window.open(url, '_blank'); // URL을 새 창에서 열기
+  };
+
   return (
     <div className="row text-center">
-      <VideoCardItem
-        src="https://via.placeholder.com/400x200?text=Video+1"
-        alt="강의 영상 1"
-        description="한 달만에 합격한 비밀! 독점 노하우"
-      />
-      <VideoCardItem
-        src="https://via.placeholder.com/400x200?text=Video+2"
-        alt="강의 영상 2"
-        description="따라하면 합격하는 자소서의 구조"
-      />
-      <VideoCardItem
-        src="https://via.placeholder.com/400x200?text=Video+3"
-        alt="강의 영상 3"
-        description="앱 개발 온라인 강의 BEST 기획전"
-      />
+      {lectures.map((lecture) => (
+        <VideoCardItem
+          key={lecture.id}
+          src={lecture.thumnail_url}
+          alt={lecture.title}
+          description={lecture.title}
+          onClick={() => handleCardClick(lecture.url)}
+        />
+      ))}
     </div>
   );
 };
