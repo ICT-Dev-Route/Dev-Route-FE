@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const Card = styled.div`
   text-align: center;
+  cursor: pointer; /* 커서 스타일 변경으로 클릭 가능 여부 표시 */
 
   .card-img-top {
     max-width: 100%;
@@ -14,9 +15,9 @@ const Card = styled.div`
   }
 `;
 
-const VideoCardItem = ({ src, alt, description }) => {
+const VideoCardItem = ({ src, alt, description, onClick }) => {
   return (
-    <Card className="col-md-4">
+    <Card className="col-md-4" onClick={onClick}>
       <div className="card">
         <img className="card-img-top" src={src} alt={alt} />
         <div className="card-body">
