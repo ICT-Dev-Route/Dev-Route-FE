@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Treebeard } from 'react-treebeard';
-import { Header, Footer } from '../Component';
+import { Header, Footer, JobCategorySelector } from '../Component';
 import data from '../Data/data';
 
 const Container = styled.div`
@@ -115,6 +115,7 @@ const styles = {
 };
 
 const Roadmap = () => {
+  const [selectedCategory, setSelectedCategory] = useState('frontend');
   const [cursor, setCursor] = useState(null);
   const [treeData, setTreeData] = useState(data);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -135,6 +136,10 @@ const Roadmap = () => {
   return (
     <>
       <Header />
+      <JobCategorySelector
+        selectedCategory={selectedCategory}
+        onChange={(category) => setSelectedCategory(category)}
+      />
       <Container>
         <TreeContainer>
           <Treebeard data={treeData} onToggle={onToggle} style={styles} />

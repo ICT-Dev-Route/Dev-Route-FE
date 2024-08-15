@@ -39,7 +39,7 @@ const CompanyHeader = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 40px; // Space between header and list
+  margin-bottom: 40px;
 `;
 
 const Logo = styled.img`
@@ -98,14 +98,12 @@ function CompanySearchModal({ show, company, companyID = 1, onClose }) {
   useEffect(() => {
     const CompanyInfo = async () => {
       const url = `http://${IP_ADDRESS}:${PORT}/recruit/company/${companyID}`;
-      const token = localStorage.getItem('token');
 
       try {
         const response = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `${token}`,
           },
         });
 
