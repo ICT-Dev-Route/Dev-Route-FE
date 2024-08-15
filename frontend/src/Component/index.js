@@ -8,6 +8,7 @@ import CompanySearchModal from './CompanySearchModal';
 import CompanyListContainer from './CompanyListContainer';
 import TechStackList from './TechStackList';
 import JobCategorySelector from './JobCategorySelector';
+import RoadmapCategorySelector from './RoadmapCategorySelector';
 
 export {
   Header,
@@ -20,4 +21,5 @@ export {
   CompanyListContainer,
   TechStackList,
   JobCategorySelector,
+  RoadmapCategorySelector,
 };
