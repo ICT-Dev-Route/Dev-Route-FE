@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Treebeard } from 'react-treebeard';
-import { Header, Footer, JobCategorySelector } from '../Component';
-import data from '../Data/data';
+import { Header, Footer, RoadmapCategorySelector } from '../Component';
+import { PORT, IP_ADDRESS } from '../Secret/env';
 
 const Container = styled.div`
   display: flex;
@@ -28,11 +28,11 @@ const InfoContainer = styled.div`
   color: #000;
 `;
 
-const Title = styled.h2`
+const Title = styled.h3`
   margin-top: 0;
 `;
 
-const Content = styled.p`
+const Content = styled.div`
   margin: 0;
 `;
 
@@ -62,25 +62,13 @@ const styles = {
       },
       toggle: {
         base: {
-          position: 'relative',
-          display: 'inline-block',
-          verticalAlign: 'middle',
-          marginLeft: '-5px',
-          height: '24px',
-          width: '24px',
+          display: 'none', // Hide the toggle base
         },
         wrapper: {
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          margin: '-7px 0 0 -7px',
-          height: '14px',
+          display: 'none', // Hide the toggle wrapper
         },
-        height: 14,
-        width: 14,
         arrow: {
-          fill: '#000',
-          strokeWidth: 0,
+          display: 'none', // Hide the toggle arrow
         },
       },
       header: {
@@ -116,40 +104,97 @@ const styles = {
 
 const Roadmap = () => {
   const [selectedCategory, setSelectedCategory] = useState('frontend');
-  const [cursor, setCursor] = useState(null);
-  const [treeData, setTreeData] = useState(data);
+  const [treeData, setTreeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
+  const [nodeDetail, setNodeDetail] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          `http://${IP_ADDRESS}:${PORT}/roadmap/${selectedCategory}`
+        );
+        if (!response.ok) {
+          throw new Error('서버 응답에 문제가 있습니다.');
+        }
+        const jsonData = await response.json();
+
+        if (jsonData.RoadmapDTOs && jsonData.RoadmapDTOs.length > 0) {
+          const initialData = jsonData.RoadmapDTOs.map((item) => ({
+            name: item.name,
+            id: item.id,
+            children: [],
+          }));
+          setTreeData(initialData);
+          setSelectedNode(initialData[0]);
+          fetchNodeDetail(initialData[0].name);
+        } else {
+          console.error('RoadmapDTOs가 응답에 없습니다.');
+        }
+      } catch (error) {
+        console.error('데이터를 불러오는 데 실패했습니다:', error);
+      }
+    }
+
+    fetchData();
+  }, [selectedCategory]);
+
+  const fetchNodeDetail = async (nodeName) => {
+    try {
+      const response = await fetch(
+        `http://${IP_ADDRESS}:${PORT}/roadmap/${selectedCategory}/${nodeName}`
+      );
+      if (!response.ok) {
+        throw new Error('서버 응답에 문제가 있습니다.');
+      }
+      const detailData = await response.json();
+      setNodeDetail(detailData);
+    } catch (error) {
+      console.error('노드 정보를 불러오는 데 실패했습니다:', error);
+    }
+  };
 
   const onToggle = (node, toggled) => {
-    if (cursor) {
-      cursor.active = false;
-    }
-    node.active = true;
-    if (node.children) {
+    if (node) {
       node.toggled = toggled;
+      setTreeData((prevData) =>
+        prevData.map((td) => (td.id === node.id ? { ...td, toggled } : td))
+      );
+      setSelectedNode(node);
+      fetchNodeDetail(node.name);
     }
-    setCursor(node);
-    setTreeData({ ...treeData });
-    setSelectedNode(node);
   };
 
   return (
     <>
       <Header />
-      <JobCategorySelector
+      <RoadmapCategorySelector
         selectedCategory={selectedCategory}
         onChange={(category) => setSelectedCategory(category)}
       />
       <Container>
         <TreeContainer>
-          <Treebeard data={treeData} onToggle={onToggle} style={styles} />
+          {treeData.length > 0 && (
+            <Treebeard
+              data={treeData}
+              onToggle={onToggle}
+              style={styles}
+              animations={false} // Disable animations to prevent VelocityComponent errors
+            />
+          )}
         </TreeContainer>
         <InfoContainer>
-          {selectedNode ? (
+          {selectedNode && nodeDetail ? (
             <>
-              <Title>{selectedNode.name}</Title>
+              <Title>
+                {selectedNode.name} - {nodeDetail.brief_info}
+              </Title>
               <Content>
-                여기에 {selectedNode.name}와 관련된 정보를 표시합니다.
+                <div>{nodeDetail.description}</div>
+                <div>
+                  <strong>관련 기술스택:</strong>{' '}
+                  {nodeDetail.related_tecks.join(', ')}
+                </div>
               </Content>
             </>
           ) : (
