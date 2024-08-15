@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import {
   Header,
   Footer,
@@ -6,6 +7,13 @@ import {
   CompanyListContainer,
 } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
+
+const CompanySearchPageContainer = styled.div`
+  width: 85%;
+  margin: 20px auto;
+  padding: 20px;
+  box-sizing: border-box;
+`;
 
 function CompanySearch() {
   const [companies, setCompanies] = useState([]);
@@ -30,14 +38,12 @@ function CompanySearch() {
   useEffect(() => {
     const CompanyInfo = async () => {
       const url = `http://${IP_ADDRESS}:${PORT}/recruit/enterprise`;
-      const token = localStorage.getItem('token');
 
       try {
         const response = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `${token}`, // 'Bearer' 접두사 추가
           },
         });
 
@@ -57,18 +63,20 @@ function CompanySearch() {
   return (
     <>
       <Header page="companySearch" />
-      <CompanyListContainer
-        companies={companies}
-        onCompanyClick={handleCompanyClick}
-      />
-      {showModal && selectedCompanyDetails && (
-        <CompanySearchModal
-          show={showModal}
-          company={selectedCompanyDetails}
-          companyID={selectedCompanyDetails.id}
-          onClose={handleCloseModal}
+      <CompanySearchPageContainer>
+        <CompanyListContainer
+          companies={companies}
+          onCompanyClick={handleCompanyClick}
         />
-      )}
+        {showModal && selectedCompanyDetails && (
+          <CompanySearchModal
+            show={showModal}
+            company={selectedCompanyDetails}
+            companyID={selectedCompanyDetails.id}
+            onClose={handleCloseModal}
+          />
+        )}
+      </CompanySearchPageContainer>
       <Footer />
     </>
   );

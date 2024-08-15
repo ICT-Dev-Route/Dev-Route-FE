@@ -34,13 +34,7 @@ const CategoryItem = styled.div`
 `;
 
 function JobCategorySelector({ selectedCategory, onChange }) {
-  const categories = [
-    'Frontend Developer',
-    'Backend Developer',
-    'Mobile Developer',
-    'AI Developer',
-    'Data Analyst',
-  ];
+  const categories = ['frontend', 'backend', 'mobile', 'ai', 'datascience'];
 
   return (
     <CategoryContainer>

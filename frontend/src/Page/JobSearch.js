@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   Header,
@@ -6,6 +6,7 @@ import {
   TechStackList,
   JobCategorySelector,
 } from '../Component';
+import { IP_ADDRESS, PORT } from '../Secret/env';
 
 const JobSearchPageContainer = styled.div`
   width: 80%;
@@ -15,127 +16,40 @@ const JobSearchPageContainer = styled.div`
 `;
 
 function JobSearch() {
-  const [selectedCategory, setSelectedCategory] =
-    useState('Frontend Developer');
-  const [jobs, setJobs] = useState([
-    {
-      category: 'Frontend Developer',
-      positions: [
-        {
-          company: 'Kakao',
-          jobTitle: 'Frontend Developer',
-          tech: 'HTML, CSS, JavaScript, React',
-          date: '2024/02/16',
-        },
-        {
-          company: 'Naver',
-          jobTitle: 'Frontend Developer',
-          tech: 'VueJS, TypeScript, Vuex',
-          date: '2024/02/17',
-        },
-        {
-          company: 'Samsung',
-          jobTitle: 'Frontend Developer',
-          tech: 'Angular, NgRx, RxJS',
-          date: '2024/02/18',
-        },
-      ],
-    },
-    {
-      category: 'Backend Developer',
-      positions: [
-        {
-          company: 'Kakao',
-          jobTitle: 'Backend Developer',
-          tech: 'Node.js, Express, MongoDB, Docker',
-          date: '2024/02/19',
-        },
-        {
-          company: 'Naver',
-          jobTitle: 'Backend Developer',
-          tech: 'Python, Django, PostgreSQL, AWS',
-          date: '2024/02/20',
-        },
-        {
-          company: 'Samsung',
-          jobTitle: 'Backend Developer',
-          tech: 'Java, Spring Boot, MySQL, Kubernetes',
-          date: '2024/02/21',
-        },
-      ],
-    },
-    {
-      category: 'Mobile Developer',
-      positions: [
-        {
-          company: 'Kakao',
-          jobTitle: 'Mobile Developer',
-          tech: 'Swift, iOS, Firebase',
-          date: '2024/02/22',
-        },
-        {
-          company: 'Naver',
-          jobTitle: 'Mobile Developer',
-          tech: 'Kotlin, Android, Realm',
-          date: '2024/02/23',
-        },
-        {
-          company: 'Samsung',
-          jobTitle: 'Mobile Developer',
-          tech: 'React Native, TypeScript, Expo',
-          date: '2024/02/24',
-        },
-      ],
-    },
-    {
-      category: 'AI Developer',
-      positions: [
-        {
-          company: 'Kakao',
-          jobTitle: 'AI Developer',
-          tech: 'Python, TensorFlow, Keras, NLP',
-          date: '2024/02/25',
-        },
-        {
-          company: 'Naver',
-          jobTitle: 'AI Developer',
-          tech: 'Python, PyTorch, Computer Vision',
-          date: '2024/02/26',
-        },
-        {
-          company: 'Samsung',
-          jobTitle: 'AI Developer',
-          tech: 'R, TensorFlow, Deep Learning',
-          date: '2024/02/27',
-        },
-      ],
-    },
-    {
-      category: 'Data Analyst',
-      positions: [
-        {
-          company: 'Kakao',
-          jobTitle: 'Data Analyst',
-          tech: 'SQL, Tableau, Excel, Python',
-          date: '2024/02/28',
-        },
-        {
-          company: 'Naver',
-          jobTitle: 'Data Analyst',
-          tech: 'R, Shiny, ggplot2',
-          date: '2024/02/29',
-        },
-        {
-          company: 'Samsung',
-          jobTitle: 'Data Analyst',
-          tech: 'Python, Pandas, Power BI',
-          date: '2024/03/01',
-        },
-      ],
-    },
-  ]);
+  const [selectedCategory, setSelectedCategory] = useState('frontend');
+  const [jobs, setJobs] = useState([]);
 
-  console.log('Jobs data:', jobs);
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const url = `http://${IP_ADDRESS}:${PORT}/recruit?type=${selectedCategory}`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        // 필드 이름을 조정하여 기존 컴포넌트와 호환
+        const modifiedData = data.map((job) => ({
+          companyName: job.companyName,
+          developField: job.developField,
+          techStacks: job.techStack, // 'techStack'을 'techStacks'로 매핑
+          dueDate: job.dueDate,
+        }));
+        setJobs(modifiedData);
+        console.log('recruit', modifiedData);
+      } catch (error) {
+        console.error('Failed to fetch jobs:', error);
+      }
+    };
+    fetchJobs();
+  }, [selectedCategory]); // selectedCategory 변화 시 데이터 재조회
 
   return (
     <>
@@ -145,14 +59,11 @@ function JobSearch() {
         onChange={(category) => setSelectedCategory(category)}
       />
       <JobSearchPageContainer>
-        {jobs
-          .filter((jobCategory) => jobCategory.category === selectedCategory)
-          .map((jobCategory, index) => (
-            <div key={index}>
-              <h2>{jobCategory.category}</h2>
-              <TechStackList items={jobCategory.positions} />
-            </div>
-          ))}
+        {jobs.length > 0 ? (
+          <TechStackList items={jobs} />
+        ) : (
+          <h2>해당 직무에 대한 채용 공고가 없습니다.</h2>
+        )}
       </JobSearchPageContainer>
       <Footer />
     </>
