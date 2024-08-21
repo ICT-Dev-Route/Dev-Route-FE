@@ -8,13 +8,15 @@ import { PORT, IP_ADDRESS } from '../Secret/env';
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   margin: 50px auto;
   width: 80%;
+  min-height: 70vh;
 `;
 
 const TreeContainer = styled.div`
   width: 300px;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.roadmapBackground};
   padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -22,11 +24,11 @@ const TreeContainer = styled.div`
 
 const InfoContainer = styled.div`
   width: 70%;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.roadmapBackground};
   padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  color: #000;
+  color: ${({ theme }) => theme.roadmapInfoText};
   position: relative; /* 우측 상단 버튼 위치를 위해 position 추가 */
 `;
 
@@ -105,15 +107,13 @@ const styles = {
 };
 
 const RedButton = styled.button`
-  background-color: red;
-  color: white;
+  background-color: ${({ theme }) => theme.roadmaScrapBtnBackground};
+  color: ${({ theme }) => theme.roadmaScrapBtnText};
   border: none;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border-radius: 5px;
+  margin-bottom: 10px;
   cursor: pointer;
-  position: absolute;
-  top: 20px;
-  right: 20px;
 `;
 
 const Roadmap = () => {

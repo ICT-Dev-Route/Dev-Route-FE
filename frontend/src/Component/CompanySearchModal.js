@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import { IP_ADDRESS, PORT } from '../Secret/env';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ const ModalOverlay = styled.div`
 `;
 
 const CompanyModal = styled.div`
-  background: white;
+  background: ${({ theme }) => theme.CompanySearchModalBackground};
   padding: 20px;
   border-radius: 8px;
   position: absolute;
@@ -33,7 +33,7 @@ const CompanyModal = styled.div`
   max-width: 1000px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
 `;
 
 const CompanyHeader = styled.div`
@@ -73,41 +73,22 @@ const Rating = styled.div`
 `;
 
 const Salary = styled.span`
-  color: green;
+  color: ${({ theme }) => theme.CompanySearchModalSalary};
   font-weight: bold;
 `;
 
 const BookmarkButton = styled.button`
-  background-color: red;
-  color: white;
+  background-color: ${({ theme }) =>
+    theme.CompanySearchModalBookmarkBtnBackground};
+  color: ${({ theme }) => theme.CompanySearchModalBookmarkBtnText};
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
 `;
 
-const renderStars = (rating) => {
-  const stars = [];
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 !== 0;
-  const totalStars = fullStars + (hasHalfStar ? 1 : 0);
-
-  for (let i = 0; i < fullStars; i++) {
-    stars.push(<FaStar key={i} color="#ffc107" />);
-  }
-  if (hasHalfStar) {
-    stars.push(<FaStarHalfAlt key="half" color="#ffc107" />);
-  }
-  for (let i = totalStars; i < 5; i++) {
-    stars.push(<FaRegStar key={i} color="#ccc" />);
-  }
-  return stars;
-};
-
 function CompanySearchModal({ show, companyID, onClose }) {
+  const theme = useTheme();
   const [companyDetail, setCompanyDetail] = useState(null);
   const navigate = useNavigate();
 
@@ -184,9 +165,32 @@ function CompanySearchModal({ show, companyID, onClose }) {
     return null;
   }
 
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    const totalStars = fullStars + (hasHalfStar ? 1 : 0);
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FaStar key={i} color={theme.CompanySearchModalStar} />);
+    }
+    if (hasHalfStar) {
+      stars.push(
+        <FaStarHalfAlt key="half" color={theme.CompanySearchModalStar} />
+      );
+    }
+    for (let i = totalStars; i < 5; i++) {
+      stars.push(
+        <FaRegStar key={i} color={theme.CompanySearchModalEmptyStar} />
+      );
+    }
+    return stars;
+  };
+
   return (
     <ModalOverlay show={show} onClick={onClose}>
       <CompanyModal onClick={(e) => e.stopPropagation()}>
+        <BookmarkButton onClick={handleBookmarkClick}>북마크</BookmarkButton>
         <CompanyHeader>
           <Logo
             src={companyDetail.logoUrl}
@@ -205,7 +209,6 @@ function CompanySearchModal({ show, companyID, onClose }) {
               만원
             </Salary>
           </DetailsContainer>
-          <BookmarkButton onClick={handleBookmarkClick}>북마크</BookmarkButton>
         </CompanyHeader>
 
         {companyDetail.recruitments && companyDetail.recruitments.length > 0 ? (

@@ -13,6 +13,8 @@ const JobSearchPageContainer = styled.div`
   margin: 20px auto;
   padding: 20px;
   box-sizing: border-box;
+  align-items: flex-start;
+  min-height: 70vh;
 `;
 
 function JobSearch() {

@@ -2,22 +2,24 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Header, Footer, JobSelectionModal } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
-import { FaRegBookmark } from 'react-icons/fa'; // 아이콘 사용
+import { FaRegBookmark } from 'react-icons/fa';
 
 const Container = styled.div`
   margin: 50px auto; /* 위아래 50px의 마진 설정 */
 `;
 
 const ScrapButton = styled.button`
-  background-color: red;
-  color: white;
+  background-color: ${({ theme }) => theme.courseSearchScrapButton};
+  color: ${({ theme }) => theme.courseSearchScrapButtonText};
+  width: 35px;
+  height: 35px;
   border: none;
   padding: 5px;
   border-radius: 50%;
   cursor: pointer;
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 20px;
   z-index: 1;
 `;
 
@@ -126,7 +128,7 @@ function CourseSearch() {
             className="btn btn-success"
             onClick={handleTechInputClick} // 클릭 시 모달 열기
           >
-            검색
+            선택
           </button>
 
           <div className="btn-group ms-3" role="group">

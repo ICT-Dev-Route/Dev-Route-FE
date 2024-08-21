@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import { LOGO } from '../Assets';
+import { AuthContext } from '../Context';
 
 // Styled components
 const HeaderContainer = styled.header`
-  background-color: #f8f9fa;
+  background-color: ${({ theme }) => theme.headerBackground};
   padding: 1rem 0;
 `;
 
@@ -18,7 +19,7 @@ const StyledContainer = styled.div`
 `;
 
 const Navbar = styled.nav`
-  background-color: #f8f9fa;
+  background-color: ${({ theme }) => theme.headerBackground};
   display: flex;
   align-items: center;
 `;
@@ -27,7 +28,7 @@ const NavbarBrand = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #000;
+  color: ${({ theme }) => theme.headerLogoText};
   font-size: 21px;
   font-weight: 600;
   margin-right: 3rem;
@@ -78,33 +79,33 @@ const NavButtons = styled.div`
 
 const StyledButton = styled(Link)`
   padding: 0.5rem 1rem;
-  border: 1px solid #28a745;
+  border: 1px solid ${({ theme }) => theme.headerButtonBackground};
   border-radius: 5px;
   text-decoration: none;
-  color: #fff;
-  background-color: #28a745;
+  color: ${({ theme }) => theme.headerButtonText};
+  background-color: ${({ theme }) => theme.headerButtonBackground};
   font-size: 16px;
   font-weight: 600;
 
   &:hover {
-    background-color: #218838;
-    color: #fff;
+    background-color: ${({ theme }) => theme.headerButtonHoverBackground};
+    color: ${({ theme }) => theme.headerButtonText};
   }
 
   &.outline {
-    background-color: transparent;
-    color: #28a745;
+    color: ${({ theme }) => theme.headerButtonBackground};
+    background-color: ${({ theme }) => theme.headerButtonBackground2};
 
     &:hover {
-      background-color: #28a745;
-      color: #fff;
+      background-color: ${({ theme }) => theme.headerButtonBackground};
+      color: ${({ theme }) => theme.headerButtonText};
     }
   }
 `;
 
-const Header = ({ page }) => {
+const Header = () => {
   const location = useLocation();
-  const token = localStorage.getItem('token');
+  const { token, logout } = useContext(AuthContext);
 
   return (
     <HeaderContainer>
@@ -195,7 +196,14 @@ const Header = ({ page }) => {
         </Navbar>
         <NavButtons>
           {token ? (
-            <StyledButton to="/Favorites">스크랩 확인하기</StyledButton>
+            <>
+              <StyledButton to="/Favorites" className="outline">
+                스크랩 확인하기
+              </StyledButton>
+              <StyledButton as="button" onClick={logout}>
+                로그아웃
+              </StyledButton>
+            </>
           ) : (
             <>
               <StyledButton to="/login" className="outline">

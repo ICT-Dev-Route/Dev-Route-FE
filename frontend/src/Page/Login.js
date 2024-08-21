@@ -7,7 +7,6 @@ import {
   IP_ADDRESS,
   KAKAO_CLIENT_ID,
   NAVER_CLIENT_ID,
-  NAVER_CLIENT_SECRET,
   GOOGLE_CLIENT_ID,
 } from '../Secret/env';
 
@@ -16,16 +15,16 @@ const StyledContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: ${({ theme }) => theme.loginBackground};
 `;
 
 const LoginForm = styled.div`
   padding: 2rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.loginLoginFormBoarder};
   border-radius: 10px;
   max-width: 400px;
   width: 100%;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.loginBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
@@ -33,7 +32,7 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 1.5rem;
   font-size: 1.8rem;
-  color: #333;
+  color: ${({ theme }) => theme.loginTitle};
 `;
 
 const IconLabel = styled.label`
@@ -41,7 +40,7 @@ const IconLabel = styled.label`
   align-items: center;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #555;
+  color: ${({ theme }) => theme.loginIconLabel};
 
   i {
     margin-right: 0.5rem;
@@ -52,7 +51,7 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.loginStyledInputBoarder};
   border-radius: 5px;
 `;
 
@@ -63,7 +62,7 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  color: #fff;
+  color: ${({ theme }) => theme.loginStyledButtonText};
   background-color: ${(props) => (props.disabled ? '#ccc' : '#28a745')};
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.3s;
@@ -76,7 +75,7 @@ const StyledButton = styled.button`
 const Divider = styled.hr`
   margin: 2rem 0;
   border: 0;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid ${({ theme }) => theme.loginDivider};
 `;
 
 const Login = () => {
@@ -150,7 +149,9 @@ const Login = () => {
       <Header />
       <StyledContainer>
         <LoginForm>
-          <Title>DevRoute</Title>
+          <Title>
+            <i className="bi bi-code"></i> DevRoute
+          </Title>
           <div className="mb-3">
             <IconLabel htmlFor="formBasicEmail">
               <i className="bi bi-envelope"></i> 이메일

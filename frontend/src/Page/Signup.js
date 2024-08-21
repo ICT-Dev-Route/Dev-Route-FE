@@ -4,21 +4,30 @@ import styled from 'styled-components';
 import { Header, Footer } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
 
+// signupBackground: Colors.white,
+//   signupFormBoarder: Colors.grey_12,
+//   signupTitle: Colors.grey_14,
+//   signupIconLabel: Colors.grey_8,
+//   signupStyledInputBoarder: Colors.grey_12,
+//   signupStyledButtonText: Colors.white,
+//   signupStyledButtonBackground: Colors.green,
+//   signupStyledButtonBackgroundHover: Colors.greenDark,
+
 const StyledContainer = styled.div`
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: ${({ theme }) => theme.signupBackground};
 `;
 
 const SignupForm = styled.div`
   padding: 2rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.signupFormBoarder};
   border-radius: 10px;
   max-width: 400px;
   width: 100%;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.signupBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
@@ -26,14 +35,14 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 1rem;
   font-size: 1.8rem;
-  color: #333;
+  color: ${({ theme }) => theme.signupTitle};
 `;
 
 const Subtitle = styled.h2`
   text-align: center;
   margin-bottom: 2rem;
   font-size: 1.2rem;
-  color: #777;
+  color: ${({ theme }) => theme.signupSubtitle};
 `;
 
 const IconLabel = styled.label`
@@ -41,7 +50,7 @@ const IconLabel = styled.label`
   align-items: center;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #555;
+  color: ${({ theme }) => theme.signupIconLabel};
 
   i {
     margin-right: 0.5rem;
@@ -52,7 +61,7 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.signupStyledInputBoarder};
   border-radius: 5px;
 `;
 
@@ -60,7 +69,7 @@ const StyledSelect = styled.select`
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.signupStyledSelectBoarder};
   border-radius: 5px;
 `;
 
@@ -71,20 +80,14 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  color: #fff;
-  background-color: #28a745;
+  color: ${({ theme }) => theme.signupStyledButtonText};
+  background-color: ${({ theme }) => theme.signupStyledButtonBackground};
   cursor: pointer;
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #218838;
+    background-color: ${({ theme }) => theme.signupStyledButtonBackgroundHover};
   }
-`;
-
-const Divider = styled.hr`
-  margin: 2rem 0;
-  border: 0;
-  border-top: 1px solid #ccc;
 `;
 
 const Signup = () => {
