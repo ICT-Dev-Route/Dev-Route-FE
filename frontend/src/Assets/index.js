@@ -13,6 +13,11 @@ import KAKAO from './KAKAO.png';
 import NAVER from './NAVER.png';
 import GOOGLE from './GOOGLE.png';
 import JOBPLANET from './JOBPLANET.png';
+import FRONTEND from './FRONTEND.png';
+import BACKEND from './BACKEND.png';
+import MOBILE from './MOBILE.png';
+import AI from './AI.png';
+import DATASCIENCE from './DATASCIENCE.png';
 
 export {
   LOGO,
@@ -30,4 +35,9 @@ export {
   NAVER,
   GOOGLE,
   JOBPLANET,
+  FRONTEND,
+  BACKEND,
+  MOBILE,
+  AI,
+  DATASCIENCE,
 };
