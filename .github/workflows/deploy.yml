@@ -47,4 +47,4 @@ jobs:
           script: |
             docker stop devroute-app || true
             docker rm devroute-app || true
-            docker run --rm -d -p 80:80 ${{secrets.DOCKER_REPO}}/devroute-app:${{github.sha}}
+            docker run --rm -d -p 80:80 --name devroute-app ${{secrets.DOCKER_REPO}}/devroute-app:${{github.sha}}
