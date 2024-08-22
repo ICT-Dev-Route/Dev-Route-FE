@@ -25,9 +25,11 @@ jobs:
           echo "${{ secrets.ENV_JS }}" >> env.js
       - name: Npm Install
         run: |
+          cd frontend/
           npm install
       - name: Npm Build
         run: |
+          cd frontend/
           npm run build
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
