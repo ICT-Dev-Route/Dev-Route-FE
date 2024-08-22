@@ -22,7 +22,7 @@ jobs:
           mkdir Secret
           cd Secret/
           touch env.js
-          echo ${{ secrets.ENV_JS }} >> env.js
+          echo "${{ secrets.ENV_JS }}" >> env.js
 
       # 내 도커허브 로그인
       - name: docker login
