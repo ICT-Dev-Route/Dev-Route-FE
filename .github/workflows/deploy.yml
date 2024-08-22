@@ -18,9 +18,9 @@ jobs:
       - name: Create env.js file
         run: |
           pwd
-          cd /frontend/src
+          cd ./frontend/src
           mkdir Secret
-          cd /frontend/src/Secret
+          cd Secret/
           touch env.js
           echo ${{ secrets.ENV_JS }} >> env.js
 
