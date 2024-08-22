@@ -7,25 +7,25 @@ import {
   IP_ADDRESS,
   KAKAO_CLIENT_ID,
   NAVER_CLIENT_ID,
-  NAVER_CLIENT_SECRET,
   GOOGLE_CLIENT_ID,
 } from '../Secret/env';
+import { KAKAO, NAVER, GOOGLE } from '../Assets';
 
 const StyledContainer = styled.div`
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: ${({ theme }) => theme.loginBackground};
 `;
 
 const LoginForm = styled.div`
   padding: 2rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.loginLoginFormBoarder};
   border-radius: 10px;
   max-width: 400px;
   width: 100%;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.loginBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
@@ -33,7 +33,7 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 1.5rem;
   font-size: 1.8rem;
-  color: #333;
+  color: ${({ theme }) => theme.loginTitle};
 `;
 
 const IconLabel = styled.label`
@@ -41,7 +41,7 @@ const IconLabel = styled.label`
   align-items: center;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #555;
+  color: ${({ theme }) => theme.loginIconLabel};
 
   i {
     margin-right: 0.5rem;
@@ -52,7 +52,7 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.loginStyledInputBoarder};
   border-radius: 5px;
 `;
 
@@ -63,7 +63,7 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  color: #fff;
+  color: ${({ theme }) => theme.loginStyledButtonText};
   background-color: ${(props) => (props.disabled ? '#ccc' : '#28a745')};
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.3s;
@@ -72,11 +72,26 @@ const StyledButton = styled.button`
     background-color: ${(props) => (props.disabled ? '#ccc' : '#218838')};
   }
 `;
-
+const SocialButton = styled(StyledButton)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.bgColor || '#28a745'};
+  font-weight: 600;
+  color: black;
+  &:hover {
+    background-color: ${(props) => props.hoverColor || '#218838'};
+  }
+  img {
+    height: 20px; // 이미지 높이 조정
+    width: auto; // 이미지 너비 자동 조정
+    margin-right: 10px; // 아이콘과 텍스트 사이의 간격
+  }
+`;
 const Divider = styled.hr`
   margin: 2rem 0;
   border: 0;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid ${({ theme }) => theme.loginDivider};
 `;
 
 const Login = () => {
@@ -111,13 +126,13 @@ const Login = () => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (response.ok) {
+        const token = response.headers.get('Authorization');
+        localStorage.setItem('token', token);
+        navigate('/mainpage');
+      } else {
+        alert('일치하는 이메일 혹은 비밀번호가 없습니다.');
       }
-
-      const token = response.headers.get('Authorization');
-      localStorage.setItem('token', token);
-      navigate('/mainpage'); // Navigate to dashboard on success
     } catch (error) {
       console.error('Login failed:', error);
     }
@@ -150,7 +165,9 @@ const Login = () => {
       <Header />
       <StyledContainer>
         <LoginForm>
-          <Title>DevRoute</Title>
+          <Title>
+            <i className="bi bi-code"></i> DevRoute
+          </Title>
           <div className="mb-3">
             <IconLabel htmlFor="formBasicEmail">
               <i className="bi bi-envelope"></i> 이메일
@@ -177,33 +194,38 @@ const Login = () => {
             />
           </div>
 
-          <div className="row mb-3">
+          <div className="mb-3">
             <div className="col">
-              <StyledButton
+              <SocialButton
                 type="button"
-                className="btn btn-light"
+                bgColor="#FEE500"
+                hoverColor="#F2C62B"
                 onClick={KakaoLogin}
               >
+                <img src={KAKAO} alt="Kakao" />
                 카카오로 로그인
-              </StyledButton>
+              </SocialButton>
             </div>
             <div className="col">
-              <StyledButton
+              <SocialButton
                 type="button"
-                className="btn btn-light"
+                bgColor="#00C65B"
+                hoverColor="#27a138"
                 onClick={NaverLogin}
               >
-                네이버로 로그인
-              </StyledButton>
+                <img src={NAVER} alt="Naver" /> 네이버로 로그인
+              </SocialButton>
             </div>
             <div className="col">
-              <StyledButton
+              <SocialButton
                 type="button"
-                className="btn btn-light"
+                bgColor="#F7F7F7"
+                hoverColor="#9C9C9C"
                 onClick={GoogleLogin}
               >
+                <img src={GOOGLE} alt="Google" />
                 구글로 로그인
-              </StyledButton>
+              </SocialButton>
             </div>
           </div>
 

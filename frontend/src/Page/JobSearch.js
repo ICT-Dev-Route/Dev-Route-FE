@@ -8,11 +8,21 @@ import {
 } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
 
+const StyledH2 = styled.h2`
+  width: 80%;
+  text-align: left;
+  margin: 15px auto;
+  margin-bottom: 0px;
+`;
+
 const JobSearchPageContainer = styled.div`
   width: 80%;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 0px auto;
+  padding: 10px;
   box-sizing: border-box;
+  align-items: flex-start;
+  min-height: 70vh;
+  margin-bottom: 50px;
 `;
 
 function JobSearch() {
@@ -43,13 +53,23 @@ function JobSearch() {
           dueDate: job.dueDate,
         }));
         setJobs(modifiedData);
-        console.log('recruit', modifiedData);
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
       }
     };
     fetchJobs();
   }, [selectedCategory]); // selectedCategory 변화 시 데이터 재조회
+
+  function getCategoryName(code) {
+    const names = {
+      frontend: '웹 프론트엔드',
+      backend: '웹 백엔드',
+      mobile: '모바일',
+      ai: '인공지능',
+      datascience: '데이터사이언스',
+    };
+    return names[code] || code;
+  }
 
   return (
     <>
@@ -58,6 +78,9 @@ function JobSearch() {
         selectedCategory={selectedCategory}
         onChange={(category) => setSelectedCategory(category)}
       />
+      {jobs.length > 0 && (
+        <StyledH2>{getCategoryName(selectedCategory)} 분야 채용공고</StyledH2>
+      )}
       <JobSearchPageContainer>
         {jobs.length > 0 ? (
           <TechStackList items={jobs} />

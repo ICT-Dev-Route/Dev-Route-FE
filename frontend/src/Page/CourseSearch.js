@@ -2,23 +2,37 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Header, Footer, JobSelectionModal } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
-import { FaRegBookmark } from 'react-icons/fa'; // 아이콘 사용
+import { FaRegBookmark } from 'react-icons/fa';
+import { YOUTUBE, INFLEARN, UDEMY } from '../Assets';
 
 const Container = styled.div`
   margin: 50px auto; /* 위아래 50px의 마진 설정 */
 `;
 
 const ScrapButton = styled.button`
-  background-color: red;
-  color: white;
+  background-color: ${({ theme }) => theme.courseSearchScrapButton};
+  color: ${({ theme }) => theme.courseSearchScrapButtonText};
+  width: 35px;
+  height: 35px;
   border: none;
   padding: 5px;
   border-radius: 50%;
   cursor: pointer;
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 20px;
   z-index: 1;
+`;
+
+const PlatformLabel = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  img {
+    height: 30px; // 이미지의 높이 설정
+    margin-right: 5px; // 텍스트와의 간격
+  }
 `;
 
 function CourseSearch() {
@@ -126,7 +140,7 @@ function CourseSearch() {
             className="btn btn-success"
             onClick={handleTechInputClick} // 클릭 시 모달 열기
           >
-            검색
+            선택
           </button>
 
           <div className="btn-group ms-3" role="group">
@@ -139,9 +153,10 @@ function CourseSearch() {
               checked={platform === 'youtube'}
               onChange={() => setPlatform('youtube')}
             />
-            <label className="btn btn-outline-danger" htmlFor="youtube">
+            <PlatformLabel className="btn btn-outline-danger" htmlFor="youtube">
+              <img src={YOUTUBE} alt="Youtube" />
               유튜브
-            </label>
+            </PlatformLabel>
             <input
               type="radio"
               className="btn-check"
@@ -151,10 +166,13 @@ function CourseSearch() {
               checked={platform === 'inflearn'}
               onChange={() => setPlatform('inflearn')}
             />
-            <label className="btn btn-outline-success" htmlFor="inflearn">
+            <PlatformLabel
+              className="btn btn-outline-success"
+              htmlFor="inflearn"
+            >
+              <img src={INFLEARN} alt="Inflearn" />
               인프런
-            </label>
-
+            </PlatformLabel>
             <input
               type="radio"
               className="btn-check"
@@ -164,9 +182,10 @@ function CourseSearch() {
               checked={platform === 'udemy'}
               onChange={() => setPlatform('udemy')}
             />
-            <label className="btn btn-outline-primary" htmlFor="udemy">
+            <PlatformLabel className="btn btn-outline-primary" htmlFor="udemy">
+              <img src={UDEMY} alt="Udemy" />
               유데미
-            </label>
+            </PlatformLabel>
           </div>
         </div>
 

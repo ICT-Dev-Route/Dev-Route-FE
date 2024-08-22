@@ -5,16 +5,26 @@ import { Treebeard } from 'react-treebeard';
 import { Header, Footer, RoadmapCategorySelector } from '../Component';
 import { PORT, IP_ADDRESS } from '../Secret/env';
 
+const StyledH2 = styled.h2`
+  width: 80%;
+  margin: 0 auto 20px;
+  text-align: left;
+
+  margin: 30px auto;
+`;
+
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 50px auto;
+  align-items: flex-start;
+  margin: 10px auto;
   width: 80%;
+  min-height: 70vh;
 `;
 
 const TreeContainer = styled.div`
   width: 300px;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.roadmapBackground};
   padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -22,11 +32,11 @@ const TreeContainer = styled.div`
 
 const InfoContainer = styled.div`
   width: 70%;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.roadmapBackground};
   padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  color: #000;
+  color: ${({ theme }) => theme.roadmapInfoText};
   position: relative; /* 우측 상단 버튼 위치를 위해 position 추가 */
 `;
 
@@ -105,15 +115,13 @@ const styles = {
 };
 
 const RedButton = styled.button`
-  background-color: red;
-  color: white;
+  background-color: ${({ theme }) => theme.roadmaScrapBtnBackground};
+  color: ${({ theme }) => theme.roadmaScrapBtnText};
   border: none;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border-radius: 5px;
+  margin-bottom: 10px;
   cursor: pointer;
-  position: absolute;
-  top: 20px;
-  right: 20px;
 `;
 
 const Roadmap = () => {
@@ -211,8 +219,6 @@ const Roadmap = () => {
         }
       );
 
-      console.log(selectedNode.id);
-
       if (!response.ok) {
         if (response.status === 400) {
           alert('로그인 후 이용가능합니다!');
@@ -228,6 +234,17 @@ const Roadmap = () => {
     }
   };
 
+  const getCategoryName = (code) => {
+    const names = {
+      FRONTEND: '웹 프론트엔드',
+      BACKEND: '웹 백엔드',
+      MOBILE_ANDROID: '모바일 안드로이드',
+      MOBILE_IOS: '모바일 IOS',
+      AIANDDATA: 'AI & DATA',
+    };
+    return names[code] || '';
+  };
+
   return (
     <>
       <Header />
@@ -235,6 +252,7 @@ const Roadmap = () => {
         selectedCategory={selectedCategory}
         onChange={(category) => setSelectedCategory(category)}
       />
+      <StyledH2>{getCategoryName(selectedCategory)}</StyledH2>
       <Container>
         <TreeContainer>
           {treeData.length > 0 && (

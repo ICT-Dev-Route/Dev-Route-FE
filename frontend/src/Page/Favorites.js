@@ -5,7 +5,6 @@ import { Header, Footer } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
-// Styled components
 const SectionTitle = styled.h3`
   margin-bottom: 20px;
   font-weight: bold;
@@ -19,13 +18,14 @@ const TechStackButtonContainer = styled.div`
 `;
 
 const TechStackButton = styled(Button)`
-  background-color: #f0f0f0;
-  color: black;
-  border: 1px solid #ccc;
+  background-color: ${({ theme }) => theme.favoritesTechStackBtnBackground};
+  color: ${({ theme }) => theme.favoritesTechStackBtnText};
+  border: 1px solid ${({ theme }) => theme.favoritesTechStackBtnBoarder};
   border-radius: 20px;
   padding-right: 30px;
   &:hover {
-    background-color: #e0e0e0;
+    background-color: ${({ theme }) =>
+      theme.favoritesTechStackBtnBackgroundHover};
   }
 `;
 
@@ -36,7 +36,7 @@ const CompanyCard = styled(Card)`
   justify-content: center;
   border: none;
   border-radius: 10px;
-  background-color: #f9f9f9;
+  background-color: ${({ theme }) => theme.favoritesCompanyCardBackground};
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -55,8 +55,8 @@ const TopRightButton = styled(Button)`
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: red;
-  color: white;
+  background-color: ${({ theme }) => theme.favoritesDeleteBtnBackground};
+  color: ${({ theme }) => theme.favoritesDeleteBtnText};
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
@@ -67,8 +67,8 @@ const SmallTopRightButton = styled(Button)`
   position: absolute;
   top: 0;
   right: 0;
-  background-color: red;
-  color: white;
+  background-color: ${({ theme }) => theme.favoritesDeleteBtnBackground};
+  color: ${({ theme }) => theme.favoritesDeleteBtnText};
   border: none;
   padding: 2px 5px;
   border-radius: 50%;
@@ -122,7 +122,6 @@ function Favorites() {
   };
 
   const handleCompanyClick = (company) => {
-    console.log('Navigating to company search with companyId:', company.id);
     navigate('/companySearch', { state: { companyId: company.id } });
   };
 
@@ -186,7 +185,9 @@ function Favorites() {
               </SmallTopRightButton>
             </TechStackButtonContainer>
           ))}
-          <TechStackButton>+ 추가하기</TechStackButton>
+          <TechStackButton onClick={() => navigate('/roadmap')}>
+            + 추가하기
+          </TechStackButton>
         </div>
 
         {/* Saved Companies Section */}
@@ -210,7 +211,7 @@ function Favorites() {
             </Col>
           ))}
           <Col md={3} className="mb-4">
-            <CompanyCard>
+            <CompanyCard onClick={() => navigate('/companySearch')}>
               <p>+ 추가하기</p>
             </CompanyCard>
           </Col>
