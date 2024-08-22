@@ -122,7 +122,6 @@ function Favorites() {
   };
 
   const handleCompanyClick = (company) => {
-    console.log('Navigating to company search with companyId:', company.id);
     navigate('/companySearch', { state: { companyId: company.id } });
   };
 

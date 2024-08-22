@@ -66,9 +66,6 @@ const CompanyListItem = ({ company, onClick }) => {
     const fullStars = Math.floor(roundedRating); // 전체 별의 개수
     const hasHalfStar = roundedRating % 1 !== 0; // 반 별이 있는지 판단 (0.5가 있으면 true)
 
-    console.log('fullStars', fullStars);
-    console.log('hasHalfStar', hasHalfStar);
-
     for (let i = 0; i < fullStars; i++) {
       stars.push(
         <FaStar key={`full-${i}`} color={theme.companyListItemStar} />

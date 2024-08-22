@@ -52,13 +52,11 @@ function CompanySearch() {
 
         // location.state에서 companyId 가져오기
         const companyIdFromState = location.state?.companyId;
-        console.log('companyIdFromState:', companyIdFromState);
 
         if (companyIdFromState) {
           const foundCompany = data.find(
             (company) => company.id === companyIdFromState
           );
-          console.log('foundCompany:', foundCompany);
 
           if (foundCompany) {
             setSelectedCompanyDetails(foundCompany);
@@ -78,20 +76,15 @@ function CompanySearch() {
 
   // 회사 카드를 클릭했을 때 호출되는 함수
   const handleCompanyClick = (company) => {
-    console.log('handleCompanyClick:', company);
     setSelectedCompanyDetails(company);
     setShowModal(true); // 모달 열기
   };
 
   // 모달을 닫을 때 호출되는 함수
   const handleCloseModal = () => {
-    console.log('Closing modal');
     setShowModal(false);
     setSelectedCompanyDetails(null); // 모달을 닫을 때 상세 정보를 초기화
   };
-
-  console.log('showModal:', showModal);
-  console.log('selectedCompanyDetails:', selectedCompanyDetails);
 
   return (
     <>

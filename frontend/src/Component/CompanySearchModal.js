@@ -110,7 +110,6 @@ function CompanySearchModal({ show, companyID, onClose }) {
 
         const data = await response.json();
         setCompanyDetail(data);
-        console.log('recruit', data);
       } catch (error) {
         console.error('Failed to fetch company info:', error);
       }

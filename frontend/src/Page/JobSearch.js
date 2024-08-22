@@ -53,7 +53,6 @@ function JobSearch() {
           dueDate: job.dueDate,
         }));
         setJobs(modifiedData);
-        console.log('recruit', modifiedData);
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
       }

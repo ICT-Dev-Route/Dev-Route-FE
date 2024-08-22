@@ -160,7 +160,6 @@ const Signup = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         navigate('/login');
       } else {
         alert('중복되는 이메일입니다 다른 이메일을 입력해주세요');
