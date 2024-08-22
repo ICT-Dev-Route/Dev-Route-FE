@@ -9,11 +9,19 @@ import {
 } from '../Component';
 import { IP_ADDRESS, PORT } from '../Secret/env';
 
+const StyledH2 = styled.h2`
+  width: 80%;
+  text-align: left;
+  margin: 30px auto;
+  margin-bottom: 0px;
+`;
+
 const CompanySearchPageContainer = styled.div`
   width: 85%;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 0px auto;
+  padding: 5px;
   box-sizing: border-box;
+  margin-bottom: 50px;
 `;
 
 function CompanySearch() {
@@ -88,6 +96,7 @@ function CompanySearch() {
   return (
     <>
       <Header page="companySearch" />
+      <StyledH2>기업 정보검색</StyledH2>
       <CompanySearchPageContainer>
         <CompanyListContainer
           companies={companies}

@@ -9,6 +9,7 @@ import {
   NAVER_CLIENT_ID,
   GOOGLE_CLIENT_ID,
 } from '../Secret/env';
+import { KAKAO, NAVER, GOOGLE } from '../Assets';
 
 const StyledContainer = styled.div`
   height: 100vh;
@@ -71,7 +72,22 @@ const StyledButton = styled.button`
     background-color: ${(props) => (props.disabled ? '#ccc' : '#218838')};
   }
 `;
-
+const SocialButton = styled(StyledButton)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.bgColor || '#28a745'};
+  font-weight: 600;
+  color: black;
+  &:hover {
+    background-color: ${(props) => props.hoverColor || '#218838'};
+  }
+  img {
+    height: 20px; // 이미지 높이 조정
+    width: auto; // 이미지 너비 자동 조정
+    margin-right: 10px; // 아이콘과 텍스트 사이의 간격
+  }
+`;
 const Divider = styled.hr`
   margin: 2rem 0;
   border: 0;
@@ -110,13 +126,13 @@ const Login = () => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (response.ok) {
+        const token = response.headers.get('Authorization');
+        localStorage.setItem('token', token);
+        navigate('/mainpage');
+      } else {
+        alert('일치하는 이메일 혹은 비밀번호가 없습니다.');
       }
-
-      const token = response.headers.get('Authorization');
-      localStorage.setItem('token', token);
-      navigate('/mainpage'); // Navigate to dashboard on success
     } catch (error) {
       console.error('Login failed:', error);
     }
@@ -178,33 +194,38 @@ const Login = () => {
             />
           </div>
 
-          <div className="row mb-3">
+          <div className="mb-3">
             <div className="col">
-              <StyledButton
+              <SocialButton
                 type="button"
-                className="btn btn-light"
+                bgColor="#FEE500"
+                hoverColor="#F2C62B"
                 onClick={KakaoLogin}
               >
+                <img src={KAKAO} alt="Kakao" />
                 카카오로 로그인
-              </StyledButton>
+              </SocialButton>
             </div>
             <div className="col">
-              <StyledButton
+              <SocialButton
                 type="button"
-                className="btn btn-light"
+                bgColor="#00C65B"
+                hoverColor="#27a138"
                 onClick={NaverLogin}
               >
-                네이버로 로그인
-              </StyledButton>
+                <img src={NAVER} alt="Naver" /> 네이버로 로그인
+              </SocialButton>
             </div>
             <div className="col">
-              <StyledButton
+              <SocialButton
                 type="button"
-                className="btn btn-light"
+                bgColor="#F7F7F7"
+                hoverColor="#9C9C9C"
                 onClick={GoogleLogin}
               >
+                <img src={GOOGLE} alt="Google" />
                 구글로 로그인
-              </StyledButton>
+              </SocialButton>
             </div>
           </div>
 

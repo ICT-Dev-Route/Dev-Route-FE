@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header, Footer } from '../Component';
+import { validateEmail, removeWhitespace } from '../utils';
 import { IP_ADDRESS, PORT } from '../Secret/env';
-
-// signupBackground: Colors.white,
-//   signupFormBoarder: Colors.grey_12,
-//   signupTitle: Colors.grey_14,
-//   signupIconLabel: Colors.grey_8,
-//   signupStyledInputBoarder: Colors.grey_12,
-//   signupStyledButtonText: Colors.white,
-//   signupStyledButtonBackground: Colors.green,
-//   signupStyledButtonBackgroundHover: Colors.greenDark,
 
 const StyledContainer = styled.div`
   height: 100vh;
@@ -73,6 +65,14 @@ const StyledSelect = styled.select`
   border-radius: 5px;
 `;
 
+const StyledError = styled.p`
+  color: red;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+`;
+
 const StyledButton = styled.button`
   width: 100%;
   margin-bottom: 1rem;
@@ -80,23 +80,60 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  color: ${({ theme }) => theme.signupStyledButtonText};
-  background-color: ${({ theme }) => theme.signupStyledButtonBackground};
-  cursor: pointer;
+  color: ${({ theme, disabled }) =>
+    disabled
+      ? '#ccc'
+      : theme.signupStyledButtonText}; // 조건에 따라 텍스트 색상 변경
+  background-color: ${({ theme, disabled }) =>
+    disabled
+      ? '#e0e0e0'
+      : theme.signupStyledButtonBackground}; // 조건에 따라 배경색 변경
+  cursor: ${({ disabled }) =>
+    disabled ? 'not-allowed' : 'pointer'}; // 조건에 따라 커서 스타일 변경
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.signupStyledButtonBackgroundHover};
+    background-color: ${({ theme, disabled }) =>
+      disabled
+        ? '#e0e0e0'
+        : theme.signupStyledButtonBackgroundHover}; // 조건에 따라 호버 배경색 변경
   }
 `;
-
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [developmentField, setDevelopmentField] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [disabled, setDisabled] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setDisabled(
+      !(email && name && password && confirmPassword && developmentField)
+    );
+  }, [email, name, password, confirmPassword, developmentField]);
+
+  useEffect(() => {
+    let error = '';
+    if (!email) {
+      error = '이메일을 입력해주세요';
+    } else if (!validateEmail(email)) {
+      error = '유효한 이메일이 아닙니다';
+    } else if (password.length < 6) {
+      error = '비밀번호는 6자리 이상이여야 합니다';
+    } else if (password !== confirmPassword) {
+      error = '비밀번호가 일치하지 않습니다';
+    } else if (!name) {
+      error = '이름을 입력해주세요';
+    } else if (!developmentField) {
+      error = '분야를 선택해주세요';
+    } else {
+      error = '';
+    }
+    setErrorMessage(error);
+  }, [email, name, password, confirmPassword, developmentField]);
 
   const SignupAPI = async (e) => {
     e.preventDefault();
@@ -126,7 +163,7 @@ const Signup = () => {
         console.log(data);
         navigate('/login');
       } else {
-        console.error('Signup failed:', response.status);
+        alert('중복되는 이메일입니다 다른 이메일을 입력해주세요');
       }
     } catch (error) {
       console.error('Network or other error:', error);
@@ -214,7 +251,11 @@ const Signup = () => {
               </StyledSelect>
             </div>
 
-            <StyledButton type="submit">회원가입 완료</StyledButton>
+            <StyledError>{errorMessage}</StyledError>
+
+            <StyledButton type="submit" disabled={disabled}>
+              회원가입 완료
+            </StyledButton>
           </form>
         </SignupForm>
       </StyledContainer>

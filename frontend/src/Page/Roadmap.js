@@ -5,11 +5,19 @@ import { Treebeard } from 'react-treebeard';
 import { Header, Footer, RoadmapCategorySelector } from '../Component';
 import { PORT, IP_ADDRESS } from '../Secret/env';
 
+const StyledH2 = styled.h2`
+  width: 80%;
+  margin: 0 auto 20px;
+  text-align: left;
+
+  margin: 30px auto;
+`;
+
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin: 50px auto;
+  margin: 10px auto;
   width: 80%;
   min-height: 70vh;
 `;
@@ -228,6 +236,17 @@ const Roadmap = () => {
     }
   };
 
+  const getCategoryName = (code) => {
+    const names = {
+      FRONTEND: '웹 프론트엔드',
+      BACKEND: '웹 백엔드',
+      MOBILE_ANDROID: '모바일 안드로이드',
+      MOBILE_IOS: '모바일 IOS',
+      AIANDDATA: 'AI & DATA',
+    };
+    return names[code] || '';
+  };
+
   return (
     <>
       <Header />
@@ -235,6 +254,7 @@ const Roadmap = () => {
         selectedCategory={selectedCategory}
         onChange={(category) => setSelectedCategory(category)}
       />
+      <StyledH2>{getCategoryName(selectedCategory)}</StyledH2>
       <Container>
         <TreeContainer>
           {treeData.length > 0 && (

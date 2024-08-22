@@ -45,6 +45,17 @@ function RoadmapCategorySelector({ selectedCategory, onChange }) {
     'AIANDDATA',
   ];
 
+  function getCategoryName(code) {
+    const names = {
+      FRONTEND: '웹 프론트엔드',
+      BACKEND: '웹 백엔드',
+      MOBILE_ANDROID: '모바일 안드로이드',
+      MOBILE_IOS: '모바일 IOS',
+      AIANDDATA: 'AI & DATA',
+    };
+    return names[code] || code;
+  }
+
   return (
     <CategoryContainer>
       <ItemsContainer>
@@ -54,7 +65,7 @@ function RoadmapCategorySelector({ selectedCategory, onChange }) {
             active={selectedCategory === category}
             onClick={() => onChange(category)}
           >
-            {category}
+            {getCategoryName(category)}
           </CategoryItem>
         ))}
       </ItemsContainer>

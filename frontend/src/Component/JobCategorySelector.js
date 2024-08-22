@@ -39,6 +39,17 @@ const CategoryItem = styled.div`
 function JobCategorySelector({ selectedCategory, onChange }) {
   const categories = ['frontend', 'backend', 'mobile', 'ai', 'datascience'];
 
+  function getCategoryName(code) {
+    const names = {
+      frontend: '웹 프론트엔드',
+      backend: '웹 백엔드',
+      mobile: '모바일',
+      ai: '인공지능',
+      datascience: '데이터사이언스',
+    };
+    return names[code] || code;
+  }
+
   return (
     <CategoryContainer>
       <ItemsContainer>
@@ -48,7 +59,7 @@ function JobCategorySelector({ selectedCategory, onChange }) {
             active={selectedCategory === category}
             onClick={() => onChange(category)}
           >
-            {category}
+            {getCategoryName(category)}
           </CategoryItem>
         ))}
       </ItemsContainer>

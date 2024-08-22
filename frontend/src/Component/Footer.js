@@ -1,7 +1,6 @@
-// Footer.js
-
 import React from 'react';
 import styled from 'styled-components';
+import { GITHUB_LINK, NOTION_LINK } from '../Secret/env';
 
 // Styled components
 const FooterContainer = styled.footer`
@@ -14,8 +13,7 @@ const Container = styled.div`
   width: 80%;
   margin: 0 auto;
   text-align: center;
-  color: ${({ theme }) =>
-    theme.footerText}; /* Softer text color for a more elegant look */
+  color: ${({ theme }) => theme.footerText};
 `;
 
 const FooterLinks = styled.div`
@@ -36,15 +34,23 @@ const FooterLink = styled.a`
 `;
 
 const Footer = () => {
+  const openLink = (url) => {
+    window.open(url, '_blank');
+  };
+
   return (
     <FooterContainer>
       <Container>
         <p>© 2024 ICT Hanium Project - H.K, S.Y, H.M, J.H</p>
         <p>All rights reserved.</p>
+        <p>E-Mail : ictedvroute@gmail.com</p>
         <FooterLinks>
-          <FooterLink href="#">About Us</FooterLink>
-          <FooterLink href="#">Blog</FooterLink>
-          <FooterLink href="#">Contact</FooterLink>
+          <FooterLink onClick={() => openLink(GITHUB_LINK)}>
+            Project Github
+          </FooterLink>
+          <FooterLink onClick={() => openLink(NOTION_LINK)}>
+            Project Notion
+          </FooterLink>
         </FooterLinks>
       </Container>
     </FooterContainer>

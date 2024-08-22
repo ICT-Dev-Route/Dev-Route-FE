@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { YOUTUBE, INFLEARN, UDEMY, JOBPLANET } from '../Assets';
 
 const SponsorSection = styled.div`
   text-align: center;
@@ -11,8 +12,8 @@ const SponsorSection = styled.div`
   }
 
   img {
-    margin: 0 10px;
-    max-height: 50px;
+    margin: 0 40px;
+    max-height: 80px;
   }
 `;
 
@@ -21,26 +22,10 @@ const SponsorContainer = () => {
     <SponsorSection>
       <h3>이용한 서비스들 & 스폰서</h3>
       <div>
-        <img
-          src="https://via.placeholder.com/150x50?text=Sponsor+1"
-          alt="Sponsor 1"
-        />
-        <img
-          src="https://via.placeholder.com/150x50?text=Sponsor+2"
-          alt="Sponsor 2"
-        />
-        <img
-          src="https://via.placeholder.com/150x50?text=Sponsor+3"
-          alt="Sponsor 3"
-        />
-        <img
-          src="https://via.placeholder.com/150x50?text=Sponsor+4"
-          alt="Sponsor 4"
-        />
-        <img
-          src="https://via.placeholder.com/150x50?text=Sponsor+5"
-          alt="Sponsor 5"
-        />
+        <img src={YOUTUBE} alt="Youtube" />
+        <img src={INFLEARN} alt="Inflearn" />
+        <img src={UDEMY} alt="Udemy" />
+        <img src={JOBPLANET} alt="Jobplanet" />
       </div>
     </SponsorSection>
   );

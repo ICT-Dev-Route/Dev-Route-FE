@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
-import { LOGO } from '../Assets';
+import { LOGO_WHITE } from '../Assets';
 import { AuthContext } from '../Context';
 
 // Styled components
@@ -112,7 +112,7 @@ const Header = () => {
       <StyledContainer>
         <Navbar className="navbar navbar-expand-lg">
           <NavbarBrand to="/mainpage">
-            <img src={LOGO} alt="DevRoute Logo" />
+            <img src={LOGO_WHITE} alt="DevRoute Logo" />
             DevRoute
           </NavbarBrand>
           <CollapseButton
