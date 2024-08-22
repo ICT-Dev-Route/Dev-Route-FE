@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header, Footer } from '../Component';
+import { validateEmail, removeWhitespace } from '../utils';
 import { IP_ADDRESS, PORT } from '../Secret/env';
 
 const StyledContainer = styled.div`
@@ -9,16 +10,16 @@ const StyledContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: ${({ theme }) => theme.signupBackground};
 `;
 
 const SignupForm = styled.div`
   padding: 2rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.signupFormBoarder};
   border-radius: 10px;
   max-width: 400px;
   width: 100%;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.signupBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
@@ -26,14 +27,14 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 1rem;
   font-size: 1.8rem;
-  color: #333;
+  color: ${({ theme }) => theme.signupTitle};
 `;
 
 const Subtitle = styled.h2`
   text-align: center;
   margin-bottom: 2rem;
   font-size: 1.2rem;
-  color: #777;
+  color: ${({ theme }) => theme.signupSubtitle};
 `;
 
 const IconLabel = styled.label`
@@ -41,7 +42,7 @@ const IconLabel = styled.label`
   align-items: center;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #555;
+  color: ${({ theme }) => theme.signupIconLabel};
 
   i {
     margin-right: 0.5rem;
@@ -52,7 +53,7 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.signupStyledInputBoarder};
   border-radius: 5px;
 `;
 
@@ -60,8 +61,16 @@ const StyledSelect = styled.select`
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.signupStyledSelectBoarder};
   border-radius: 5px;
+`;
+
+const StyledError = styled.p`
+  color: red;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
 `;
 
 const StyledButton = styled.button`
@@ -71,29 +80,60 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  color: #fff;
-  background-color: #28a745;
-  cursor: pointer;
+  color: ${({ theme, disabled }) =>
+    disabled
+      ? '#ccc'
+      : theme.signupStyledButtonText}; // 조건에 따라 텍스트 색상 변경
+  background-color: ${({ theme, disabled }) =>
+    disabled
+      ? '#e0e0e0'
+      : theme.signupStyledButtonBackground}; // 조건에 따라 배경색 변경
+  cursor: ${({ disabled }) =>
+    disabled ? 'not-allowed' : 'pointer'}; // 조건에 따라 커서 스타일 변경
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #218838;
+    background-color: ${({ theme, disabled }) =>
+      disabled
+        ? '#e0e0e0'
+        : theme.signupStyledButtonBackgroundHover}; // 조건에 따라 호버 배경색 변경
   }
 `;
-
-const Divider = styled.hr`
-  margin: 2rem 0;
-  border: 0;
-  border-top: 1px solid #ccc;
-`;
-
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [developmentField, setDevelopmentField] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [disabled, setDisabled] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setDisabled(
+      !(email && name && password && confirmPassword && developmentField)
+    );
+  }, [email, name, password, confirmPassword, developmentField]);
+
+  useEffect(() => {
+    let error = '';
+    if (!email) {
+      error = '이메일을 입력해주세요';
+    } else if (!validateEmail(email)) {
+      error = '유효한 이메일이 아닙니다';
+    } else if (password.length < 6) {
+      error = '비밀번호는 6자리 이상이여야 합니다';
+    } else if (password !== confirmPassword) {
+      error = '비밀번호가 일치하지 않습니다';
+    } else if (!name) {
+      error = '이름을 입력해주세요';
+    } else if (!developmentField) {
+      error = '분야를 선택해주세요';
+    } else {
+      error = '';
+    }
+    setErrorMessage(error);
+  }, [email, name, password, confirmPassword, developmentField]);
 
   const SignupAPI = async (e) => {
     e.preventDefault();
@@ -120,10 +160,9 @@ const Signup = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         navigate('/login');
       } else {
-        console.error('Signup failed:', response.status);
+        alert('중복되는 이메일입니다 다른 이메일을 입력해주세요');
       }
     } catch (error) {
       console.error('Network or other error:', error);
@@ -211,7 +250,11 @@ const Signup = () => {
               </StyledSelect>
             </div>
 
-            <StyledButton type="submit">회원가입 완료</StyledButton>
+            <StyledError>{errorMessage}</StyledError>
+
+            <StyledButton type="submit" disabled={disabled}>
+              회원가입 완료
+            </StyledButton>
           </form>
         </SignupForm>
       </StyledContainer>

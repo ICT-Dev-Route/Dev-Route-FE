@@ -6,10 +6,10 @@ import MainpageBannerItem from './MainpageBannerItem';
 
 const BannerContainer = styled.div`
   width: 80%;
-  margin: 0 auto;
+  margin: 20px auto;
   height: 300px;
   overflow: hidden;
-  background-color: #f8f9fa;
+  background-color: ${({ theme }) => theme.BannerContainerBackground};
 `;
 
 const MainpageBanner = () => {

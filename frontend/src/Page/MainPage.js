@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
-import { PORT, IP_ADDRESS } from '../Secret/env';
 import {
   Header,
   Footer,
@@ -18,39 +16,10 @@ const MainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px 0;
+  gap: 40px;
 `;
 
 const MainPage = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await fetch(`http://${IP_ADDRESS}:${PORT}/token`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          const token = await response.text();
-          localStorage.setItem('token', token);
-          console.log('Token stored in localStorage:', token);
-        } else {
-          navigate('/mainpage');
-        }
-      } catch (error) {
-        console.error('Failed to fetch token:', error);
-        navigate('/mainpage');
-      }
-    };
-
-    // Check if token is null or not present in localStorage
-    const token = localStorage.getItem('token');
-    if (!token) {
-      fetchToken();
-    }
-  }, [navigate]);
-
   return (
     <>
       <Header />

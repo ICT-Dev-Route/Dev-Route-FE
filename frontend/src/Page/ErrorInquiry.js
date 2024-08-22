@@ -15,21 +15,21 @@ const PageContainer = styled.div`
 const InquiryContainer = styled(Container)`
   width: 70%; /* InquiryContainer의 너비를 80%로 설정 */
   padding: 30px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.errorInquiryBorder};
   border-radius: 10px;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.errorInquiryBackground};
 `;
 
 const FormTitleSmall = styled.h5`
   margin-bottom: 10px;
   font-weight: normal;
-  color: #6c757d; /* 회색 톤의 작은 텍스트 */
+  color: ${({ theme }) => theme.errorInquiryCaution};
 `;
 
 const FormTitleBold = styled.h4`
   margin-bottom: 20px;
   font-weight: bold;
-  color: #343a40; /* 진한 색상의 큰 텍스트 */
+  color: ${({ theme }) => theme.errorInquiryTitle}; /* 진한 색상의 큰 텍스트 */
 `;
 
 const CustomFormGroup = styled(Form.Group)`
@@ -43,19 +43,19 @@ const CustomDropdown = styled(Dropdown)`
 const CustomTextarea = styled(Form.Control)`
   height: 200px;
   resize: none;
-  border: 2px solid #007bff;
+  border: 1.5px solid;
   width: 100%; /* 너비를 100%로 설정하여 컨테이너를 꽉 채움 */
   &:focus {
     box-shadow: none;
-    border-color: #0056b3;
+    border-color: ${({ theme }) => theme.errorInquiryTextBoarder};
   }
 `;
 
 const SubmitButton = styled(Button)`
-  background-color: #28a745;
+  background-color: ${({ theme }) => theme.errorInquiryBtn};
   border: none;
   &:hover {
-    background-color: #218838;
+    background-color: ${({ theme }) => theme.errorInquiryBtnHover};
   }
   display: block;
   margin-left: auto; /* 오른쪽 정렬을 위해 margin-left: auto 설정 */
@@ -101,10 +101,11 @@ function ErrorInquiry() {
         } else {
           throw new Error('페이지 이동 실패');
         }
+      } else {
+        alert('저장이 완료되었습니다.');
+        setTextInput('');
+        navigate('/mainpage');
       }
-      alert('저장이 완료되었습니다.');
-      setTextInput('');
-      navigate('/mainpage');
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('저장 중 오류가 발생했습니다.');

@@ -23,23 +23,23 @@ const TextContainer = styled.div`
 const Title = styled.h1`
   margin: 0;
   font-size: 3rem;
-  color: #333;
+  color: ${({ theme }) => theme.MainpageBannerTitle};
 `;
 
 const Description = styled.p`
   font-size: 1rem;
   margin: 10px 0;
-  color: #555;
+  color: ${({ theme }) => theme.MainpageBannerDetail};
 `;
 
 const StyledButton = styled(Button)`
   font-size: 1.25rem;
   font-weight: 600;
-  background-color: green;
+  background-color: ${({ theme }) => theme.MainpageBannerBtn};
   border: none;
   margin-top: 10px;
   &:hover {
-    background-color: darkgreen;
+    background-color: ${({ theme }) => theme.MainpageBannerBtnHover};
   }
 `;
 

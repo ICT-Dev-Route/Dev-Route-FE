@@ -6,16 +6,16 @@ const TechStackTable = styled.table`
   width: 100%;
   margin-top: 20px;
   border-collapse: collapse;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.techStackListBorder};
 
   th,
   td {
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid ${({ theme }) => theme.techStackItemBorder};
   }
 
   th {
-    background-color: #f8f9fa;
+    background-color: ${({ theme }) => theme.techStackListBackground};
   }
 `;
 

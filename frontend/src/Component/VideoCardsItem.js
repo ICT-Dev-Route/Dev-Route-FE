@@ -13,6 +13,10 @@ const Card = styled.div`
   .card-body {
     padding: 10px;
   }
+
+  .card-text {
+    font-weight: 600;
+  }
 `;
 
 const VideoCardItem = ({ src, alt, description, onClick }) => {

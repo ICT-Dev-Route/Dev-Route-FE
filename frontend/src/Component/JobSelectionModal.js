@@ -1,7 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Modal } from 'react-bootstrap';
-import { IP_ADDRESS, PORT } from '../Secret/env'; // IP 주소와 PORT 설정
+import { IP_ADDRESS, PORT } from '../Secret/env';
+
+const JobTitle = styled.h5`
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: ${({ theme }) => theme.jobModalText};
+`;
+
+const TechStackList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+`;
+
+const TechStackButton = styled.button`
+  margin: 5px;
+  padding: 10px;
+  background-color: ${({ theme }) => theme.jobModalBackground};
+  border: 1px solid ${({ theme }) => theme.jobModalBorder};
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.jobModalHoverBackground};
+  }
+`;
 
 const JobSelectionModal = ({ show, onClose, onSelectTech }) => {
   const [jobData, setJobData] = useState({});
@@ -53,29 +77,5 @@ const JobSelectionModal = ({ show, onClose, onSelectTech }) => {
     </Modal>
   );
 };
-
-const JobTitle = styled.h5`
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #343a40;
-`;
-
-const TechStackList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-`;
-
-const TechStackButton = styled.button`
-  margin: 5px;
-  padding: 10px;
-  background-color: #e9ecef;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    background-color: #dee2e6;
-  }
-`;
 
 export default JobSelectionModal;
