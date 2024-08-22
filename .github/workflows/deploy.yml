@@ -33,6 +33,7 @@ jobs:
 
       - name: Docker 빌드 및 푸시
         run: |
+          cd frontend/
           docker build -t ${{secrets.DOCKER_REPO}}/devroute-app:${{github.sha}} .
           docker push ${{secrets.DOCKER_REPO}}/devroute-app:${{github.sha}}
 
