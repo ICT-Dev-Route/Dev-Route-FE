@@ -17,6 +17,7 @@ jobs:
       # 도커 이미지에 env 파일 포함
       - name: Create env.js file
         run: |
+          pwd
           cd /frontend/src
           mkdir Secret
           cd /frontend/src/Secret
