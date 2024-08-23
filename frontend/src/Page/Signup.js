@@ -137,7 +137,7 @@ const Signup = () => {
 
   const SignupAPI = async (e) => {
     e.preventDefault();
-    const url = `http://${IP_ADDRESS}:${PORT}/signup`;
+    const url = `https://${IP_ADDRESS}:${PORT}/signup`;
 
     if (password !== confirmPassword) {
       alert('Passwords do not match.');
