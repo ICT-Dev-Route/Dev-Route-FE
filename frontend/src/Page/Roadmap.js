@@ -141,7 +141,7 @@ const Roadmap = () => {
     async function fetchData() {
       try {
         const response = await fetch(
-          `http://${IP_ADDRESS}:${PORT}/roadmap/${selectedCategory}`
+          `https://${IP_ADDRESS}:${PORT}/roadmap/${selectedCategory}`
         );
         if (!response.ok) {
           throw new Error('서버 응답에 문제가 있습니다.');
@@ -178,7 +178,7 @@ const Roadmap = () => {
   const fetchNodeDetail = async (nodeName) => {
     try {
       const response = await fetch(
-        `http://${IP_ADDRESS}:${PORT}/roadmap/${selectedCategory}/${nodeName}`
+        `https://${IP_ADDRESS}:${PORT}/roadmap/${selectedCategory}/${nodeName}`
       );
       if (!response.ok) {
         throw new Error('서버 응답에 문제가 있습니다.');
@@ -205,7 +205,7 @@ const Roadmap = () => {
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(
-        `http://${IP_ADDRESS}:${PORT}/bookmark/add`,
+        `https://${IP_ADDRESS}:${PORT}/bookmark/add`,
         {
           method: 'POST',
           headers: {

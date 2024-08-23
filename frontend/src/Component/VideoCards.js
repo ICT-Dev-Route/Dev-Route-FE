@@ -27,7 +27,7 @@ const VideoCards = () => {
     const fetchLectures = async () => {
       try {
         const response = await fetch(
-          `http://${IP_ADDRESS}:${PORT}/main/lectures`
+          `https://${IP_ADDRESS}:${PORT}/main/lectures`
         );
         if (!response.ok) {
           throw new Error('데이터를 불러오는데 실패했습니다.');

@@ -85,7 +85,7 @@ function ErrorInquiry() {
     };
 
     try {
-      const response = await fetch(`http://${IP_ADDRESS}:${PORT}/error-page`, {
+      const response = await fetch(`https://${IP_ADDRESS}:${PORT}/error-page`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchToken = async () => {
     try {
-      const response = await fetch(`http://${IP_ADDRESS}:${PORT}/token`, {
+      const response = await fetch(`https://${IP_ADDRESS}:${PORT}/token`, {
         method: 'GET',
         credentials: 'include',
       });

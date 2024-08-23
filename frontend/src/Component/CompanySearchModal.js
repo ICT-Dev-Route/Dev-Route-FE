@@ -94,7 +94,7 @@ function CompanySearchModal({ show, companyID, onClose }) {
 
   useEffect(() => {
     const fetchCompanyInfo = async () => {
-      const url = `http://${IP_ADDRESS}:${PORT}/recruit/company/${companyID}`;
+      const url = `https://${IP_ADDRESS}:${PORT}/recruit/company/${companyID}`;
 
       try {
         const response = await fetch(url, {
@@ -131,7 +131,7 @@ function CompanySearchModal({ show, companyID, onClose }) {
 
     try {
       const response = await fetch(
-        `http://${IP_ADDRESS}:${PORT}/bookmark/add`,
+        `https://${IP_ADDRESS}:${PORT}/bookmark/add`,
         {
           method: 'POST',
           headers: {

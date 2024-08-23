@@ -31,7 +31,7 @@ function JobSearch() {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const url = `http://${IP_ADDRESS}:${PORT}/recruit?type=${selectedCategory}`;
+      const url = `https://${IP_ADDRESS}:${PORT}/recruit?type=${selectedCategory}`;
 
       try {
         const response = await fetch(url, {

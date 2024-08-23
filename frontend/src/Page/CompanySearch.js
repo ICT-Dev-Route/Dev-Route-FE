@@ -34,7 +34,7 @@ function CompanySearch() {
   // 페이지가 로드될 때 회사 목록을 불러오고, 만약 state에 companyId가 있으면 해당 회사를 선택
   useEffect(() => {
     const fetchCompanyInfo = async () => {
-      const url = `http://${IP_ADDRESS}:${PORT}/recruit/enterprise`;
+      const url = `https://${IP_ADDRESS}:${PORT}/recruit/enterprise`;
 
       try {
         const response = await fetch(url, {

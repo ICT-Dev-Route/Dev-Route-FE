@@ -85,7 +85,7 @@ function Favorites() {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      const url = `http://${IP_ADDRESS}:${PORT}/mypage`;
+      const url = `https://${IP_ADDRESS}:${PORT}/mypage`;
       const token = localStorage.getItem('token');
 
       try {
@@ -128,7 +128,7 @@ function Favorites() {
   const handleRemoveItem = async (id, type) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://${IP_ADDRESS}:${PORT}/bookmark`, {
+      const response = await fetch(`https://${IP_ADDRESS}:${PORT}/bookmark`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -40,7 +40,7 @@ const JobSelectionModal = ({ show, onClose, onSelectTech }) => {
   const fetchJobData = async () => {
     try {
       const response = await fetch(
-        `http://${IP_ADDRESS}:${PORT}/lecture/techstack`
+        `https://${IP_ADDRESS}:${PORT}/lecture/techstack`
       );
       if (!response.ok) {
         throw new Error('서버 응답에 문제가 있습니다.');

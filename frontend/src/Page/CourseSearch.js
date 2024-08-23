@@ -54,7 +54,7 @@ function CourseSearch() {
       };
 
       const response = await fetch(
-        `http://${IP_ADDRESS}:${PORT}/lecture?platform_name=${platformMap[platformName]}&tech_name=${techName}`
+        `https://${IP_ADDRESS}:${PORT}/lecture?platform_name=${platformMap[platformName]}&tech_name=${techName}`
       );
 
       if (!response.ok) {
@@ -95,7 +95,7 @@ function CourseSearch() {
 
     try {
       const response = await fetch(
-        `http://${IP_ADDRESS}:${PORT}/bookmark/add`,
+        `https://${IP_ADDRESS}:${PORT}/bookmark/add`,
         {
           method: 'POST',
           headers: {
