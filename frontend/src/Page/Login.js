@@ -139,7 +139,7 @@ const Login = () => {
   };
 
   const KakaoLogin = () => {
-    const redirectUri = `https://${IP_ADDRESS}:${PORT}/auth/kakao/callback`;
+    const redirectUri = `https://${IP_ADDRESS}/auth/kakao/callback`;
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code`;
 
     window.location.href = kakaoAuthUrl;
@@ -148,14 +148,14 @@ const Login = () => {
   const NaverLogin = () => {
     const state = generateState();
     localStorage.setItem('naverState', state);
-    const redirectUri = `https://${IP_ADDRESS}:${PORT}/auth/naver/callback`;
+    const redirectUri = `https://${IP_ADDRESS}/auth/naver/callback`;
     const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&state=${state}`;
 
     window.location.href = naverAuthUrl;
   };
 
   const GoogleLogin = () => {
-    const redirectUri = `https://${IP_ADDRESS}:${PORT}/auth/google/callback`;
+    const redirectUri = `https://${IP_ADDRESS}/auth/google/callback`;
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=email%20profile%20openid&access_type=offline`;
 
     window.location.href = googleAuthUrl;
